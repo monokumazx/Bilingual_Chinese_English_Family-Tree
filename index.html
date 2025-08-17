@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chinese Family Tree</title>
-    <!-- Use Tailwind CSS for a modern, responsive design -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -136,23 +135,17 @@
             Chinese Family Tree 家谱
         </h1>
 
-        <!-- Grandparents' Generation -->
         <div class="flex justify-center items-end relative mb-8 flex-wrap">
-            <!-- Dad's Side Grandparents -->
             <div class="flex items-end mx-8">
                 <div class="connector-parent">
                     <div class="flex justify-center">
                         <div class="node node-paternal">
-                            <!-- Image slot for Grandfather -->
-                            <img src="https://placehold.co/64x64/4a5568/a0aec0?text=爷爷" alt="Grandfather's photo" class="profile-image" />
                             <div class="node-title">Grandfather</div>
                             <div class="node-chinese">爷爷</div>
                             <div class="node-pinyin">Yéye</div>
                         </div>
                         <i class="fas fa-heart text-red-500 mx-2 mb-4"></i>
                         <div class="node node-paternal">
-                            <!-- Image slot for Grandmother (Dad's side) -->
-                            <img src="https://placehold.co/64x64/4a5568/a0aec0?text=奶奶" alt="Grandmother's photo" class="profile-image" />
                             <div class="node-title">Grandmother</div>
                             <div class="node-chinese">奶奶</div>
                             <div class="node-pinyin">Nǎinai</div>
@@ -161,21 +154,16 @@
                 </div>
             </div>
             <div class="line-vertical h-12"></div>
-            <!-- Mum's Side Grandparents -->
             <div class="flex items-end mx-8">
                 <div class="connector-parent">
                     <div class="flex justify-center">
                         <div class="node node-maternal">
-                            <!-- Image slot for Grandmother (Mum's side) -->
-                            <img src="https://placehold.co/64x64/4a5568/a0aec0?text=外婆" alt="Grandmother's photo" class="profile-image" />
                             <div class="node-title">Grandmother</div>
                             <div class="node-chinese">外婆</div>
                             <div class="node-pinyin">Wàipó</div>
                         </div>
                         <i class="fas fa-heart text-red-500 mx-2 mb-4"></i>
                         <div class="node node-maternal">
-                            <!-- Image slot for Grandfather (Mum's side) -->
-                            <img src="https://placehold.co/64x64/4a5568/a0aec0?text=外公" alt="Grandfather's photo" class="profile-image" />
                             <div class="node-title">Grandfather</div>
                             <div class="node-chinese">外公</div>
                             <div class="node-pinyin">Wàigōng</div>
@@ -185,26 +173,19 @@
             </div>
         </div>
 
-        <!-- Horizontal line connecting generations -->
         <div class="line-horizontal w-full my-4"></div>
 
-        <!-- Parents' and Aunts/Uncles' Generation -->
         <div class="flex justify-center items-start mb-8 flex-wrap">
-            <!-- Dad's side siblings/spouses -->
             <div class="flex flex-col items-center">
                 <div class="line-vertical"></div>
                 <div class="flex items-center mt-2">
                     <div class="node node-paternal">
-                        <!-- Image slot for Uncle (older brother) -->
-                        <img src="https://placehold.co/64x64/4a5568/a0aec0?text=伯伯" alt="Uncle's photo" class="profile-image" />
                         <div class="node-title">Uncle (older brother)</div>
                         <div class="node-chinese">伯伯</div>
                         <div class="node-pinyin">Bóbo</div>
                     </div>
                     <i class="fas fa-heart text-red-500 mx-2"></i>
                     <div class="node node-paternal">
-                        <!-- Image slot for Aunt (older brother's wife) -->
-                        <img src="https://placehold.co/64x64/4a5568/a0aec0?text=伯母" alt="Aunt's photo" class="profile-image" />
                         <div class="node-title">Aunt (older brother's wife)</div>
                         <div class="node-chinese">伯母</div>
                         <div class="node-pinyin">Bómǔ</div>
@@ -215,16 +196,12 @@
                 <div class="line-vertical"></div>
                 <div class="flex items-center mt-2">
                     <div class="node node-paternal">
-                        <!-- Image slot for Uncle (younger brother) -->
-                        <img src="https://placehold.co/64x64/4a5568/a0aec0?text=叔叔" alt="Uncle's photo" class="profile-image" />
                         <div class="node-title">Uncle (younger brother)</div>
                         <div class="node-chinese">叔叔</div>
                         <div class="node-pinyin">Shūshu</div>
                     </div>
                     <i class="fas fa-heart text-red-500 mx-2"></i>
                     <div class="node node-paternal">
-                        <!-- Image slot for Aunt (younger brother's wife) -->
-                        <img src="https://placehold.co/64x64/4a5568/a0aec0?text=婶婶" alt="Aunt's photo" class="profile-image" />
                         <div class="node-title">Aunt (younger brother's wife)</div>
                         <div class="node-chinese">婶婶</div>
                         <div class="node-pinyin">Shěnshen</div>
@@ -235,16 +212,12 @@
                 <div class="line-vertical"></div>
                 <div class="flex items-center mt-2">
                     <div class="node node-paternal">
-                        <!-- Image slot for Aunt (older sister) -->
-                        <img src="https://placehold.co/64x64/4a5568/a0aec0?text=姑妈" alt="Aunt's photo" class="profile-image" />
                         <div class="node-title">Aunt (older sister)</div>
                         <div class="node-chinese">姑妈</div>
                         <div class="node-pinyin">Gūmā</div>
                     </div>
                     <i class="fas fa-heart text-red-500 mx-2"></i>
                     <div class="node node-paternal">
-                        <!-- Image slot for Uncle (older sister's husband) -->
-                        <img src="https://placehold.co/64x64/4a5568/a0aec0?text=姑父" alt="Uncle's photo" class="profile-image" />
                         <div class="node-title">Uncle (older sister's husband)</div>
                         <div class="node-chinese">姑父</div>
                         <div class="node-pinyin">Gūfù</div>
@@ -255,16 +228,12 @@
                 <div class="line-vertical"></div>
                 <div class="flex items-center mt-2">
                     <div class="node node-paternal">
-                        <!-- Image slot for Aunt (younger sister) -->
-                        <img src="https://placehold.co/64x64/4a5568/a0aec0?text=姑姑" alt="Aunt's photo" class="profile-image" />
                         <div class="node-title">Aunt (younger sister)</div>
                         <div class="node-chinese">姑姑</div>
                         <div class="node-pinyin">Gūgu</div>
                     </div>
                     <i class="fas fa-heart text-red-500 mx-2"></i>
                     <div class="node node-paternal">
-                        <!-- Image slot for Uncle (younger sister's husband) -->
-                        <img src="https://placehold.co/64x64/4a5568/a0aec0?text=姑父" alt="Uncle's photo" class="profile-image" />
                         <div class="node-title">Uncle (younger sister's husband)</div>
                         <div class="node-chinese">姑父</div>
                         <div class="node-pinyin">Gūfù</div>
@@ -272,21 +241,16 @@
                 </div>
             </div>
             
-            <!-- Dad and Mum -->
             <div class="flex flex-col items-center mx-16">
                 <div class="line-vertical"></div>
                 <div class="flex items-center mt-2">
                     <div class="node node-paternal">
-                        <!-- Image slot for Dad -->
-                        <img src="https://placehold.co/64x64/4a5568/a0aec0?text=爸爸" alt="Dad's photo" class="profile-image" />
                         <div class="node-title">Dad</div>
                         <div class="node-chinese">爸爸</div>
                         <div class="node-pinyin">Bàba</div>
                     </div>
                     <i class="fas fa-heart text-red-500 mx-2"></i>
                     <div class="node node-maternal">
-                        <!-- Image slot for Mum -->
-                        <img src="https://placehold.co/64x64/4a5568/a0aec0?text=妈妈" alt="Mum's photo" class="profile-image" />
                         <div class="node-title">Mum</div>
                         <div class="node-chinese">妈妈</div>
                         <div class="node-pinyin">Māma</div>
@@ -294,21 +258,16 @@
                 </div>
             </div>
 
-            <!-- Mum's side siblings/spouses -->
             <div class="flex flex-col items-center">
                 <div class="line-vertical"></div>
                 <div class="flex items-center mt-2">
                     <div class="node node-maternal">
-                        <!-- Image slot for Aunt (older sister) -->
-                        <img src="https://placehold.co/64x64/4a5568/a0aec0?text=姨妈" alt="Aunt's photo" class="profile-image" />
                         <div class="node-title">Aunt (older sister)</div>
                         <div class="node-chinese">姨妈</div>
                         <div class="node-pinyin">Yímā</div>
                     </div>
                     <i class="fas fa-heart text-red-500 mx-2"></i>
                     <div class="node node-maternal">
-                        <!-- Image slot for Uncle (older sister's husband) -->
-                        <img src="https://placehold.co/64x64/4a5568/a0aec0?text=姨父" alt="Uncle's photo" class="profile-image" />
                         <div class="node-title">Uncle (older sister's husband)</div>
                         <div class="node-chinese">姨父</div>
                         <div class="node-pinyin">Yífù</div>
@@ -319,16 +278,12 @@
                 <div class="line-vertical"></div>
                 <div class="flex items-center mt-2">
                     <div class="node node-maternal">
-                        <!-- Image slot for Aunt (younger sister) -->
-                        <img src="https://placehold.co/64x64/4a5568/a0aec0?text=阿姨" alt="Aunt's photo" class="profile-image" />
                         <div class="node-title">Aunt (younger sister)</div>
                         <div class="node-chinese">阿姨</div>
                         <div class="node-pinyin">Āyí</div>
                     </div>
                     <i class="fas fa-heart text-red-500 mx-2"></i>
                     <div class="node node-maternal">
-                        <!-- Image slot for Uncle (younger sister's husband) -->
-                        <img src="https://placehold.co/64x64/4a5568/a0aec0?text=姨父" alt="Uncle's photo" class="profile-image" />
                         <div class="node-title">Uncle (younger sister's husband)</div>
                         <div class="node-chinese">姨父</div>
                         <div class="node-pinyin">Yífù</div>
@@ -339,16 +294,12 @@
                 <div class="line-vertical"></div>
                 <div class="flex items-center mt-2">
                     <div class="node node-maternal">
-                        <!-- Image slot for Uncle (older or younger brother) -->
-                        <img src="https://placehold.co/64x64/4a5568/a0aec0?text=舅舅" alt="Uncle's photo" class="profile-image" />
                         <div class="node-title">Uncle (older or younger brother)</div>
                         <div class="node-chinese">舅舅</div>
                         <div class="node-pinyin">Jiùjiu</div>
                     </div>
                     <i class="fas fa-heart text-red-500 mx-2"></i>
                     <div class="node node-maternal">
-                        <!-- Image slot for Brother's wife -->
-                        <img src="https://placehold.co/64x64/4a5568/a0aec0?text=舅母" alt="Brother's wife photo" class="profile-image" />
                         <div class="node-title">Brother's wife</div>
                         <div class="node-chinese">舅母</div>
                         <div class="node-pinyin">Jiùmǔ</div>
@@ -357,25 +308,18 @@
             </div>
         </div>
 
-        <!-- Horizontal line connecting generations -->
         <div class="line-horizontal w-full my-4"></div>
         
-        <!-- Children's Generation (Your Generation) -->
         <div class="flex justify-center items-start mb-8 flex-wrap">
-            <!-- Cousins (Dad's side) -->
             <div class="flex flex-col items-center">
                 <div class="line-vertical"></div>
                 <div class="flex flex-wrap justify-center mt-2">
                     <div class="node node-paternal">
-                        <!-- Image slot for Male cousin (Dad's side) -->
-                        <img src="https://placehold.co/64x64/4a5568/a0aec0?text=堂兄/弟" alt="Male cousin's photo" class="profile-image" />
                         <div class="node-title">Male cousin (older/younger)</div>
                         <div class="node-chinese">堂兄/弟</div>
                         <div class="node-pinyin">Táng xiōng/dì</div>
                     </div>
                     <div class="node node-paternal">
-                        <!-- Image slot for Female cousin (Dad's side) -->
-                        <img src="https://placehold.co/64x64/4a5568/a0aec0?text=堂姐/妹" alt="Female cousin's photo" class="profile-image" />
                         <div class="node-title">Female cousin (older/younger)</div>
                         <div class="node-chinese">堂姐/妹</div>
                         <div class="node-pinyin">Táng jiě/mèi</div>
@@ -386,15 +330,11 @@
                 <div class="line-vertical"></div>
                 <div class="flex flex-wrap justify-center mt-2">
                     <div class="node node-maternal">
-                        <!-- Image slot for Male cousin (Dad's side) -->
-                        <img src="https://placehold.co/64x64/4a5568/a0aec0?text=表兄/弟" alt="Male cousin's photo" class="profile-image" />
                         <div class="node-title">Male cousin (older/younger)</div>
                         <div class="node-chinese">表兄/弟</div>
                         <div class="node-pinyin">Biǎo xiōng/dì</div>
                     </div>
                     <div class="node node-maternal">
-                        <!-- Image slot for Female cousin (Dad's side) -->
-                        <img src="https://placehold.co/64x64/4a5568/a0aec0?text=表姐/妹" alt="Female cousin's photo" class="profile-image" />
                         <div class="node-title">Female cousin (older/younger)</div>
                         <div class="node-chinese">表姐/妹</div>
                         <div class="node-pinyin">Biǎo jiě/mèi</div>
@@ -402,73 +342,54 @@
                 </div>
             </div>
             
-            <!-- You and your siblings -->
             <div class="flex flex-col items-center mx-16">
                 <div class="line-vertical"></div>
                 <div class="flex flex-wrap justify-center mt-2">
                     <div class="node node-paternal">
-                        <!-- Image slot for Older brother's wife -->
-                        <img src="https://placehold.co/64x64/4a5568/a0aec0?text=嫂子" alt="Older brother's wife photo" class="profile-image" />
                         <div class="node-title">Older brother's wife</div>
                         <div class="node-chinese">嫂子</div>
                         <div class="node-pinyin">Sǎozi</div>
                     </div>
                     <i class="fas fa-heart text-red-500 mx-2"></i>
                     <div class="node node-paternal">
-                        <!-- Image slot for Older brother -->
-                        <img src="https://placehold.co/64x64/4a5568/a0aec0?text=哥哥" alt="Older brother's photo" class="profile-image" />
                         <div class="node-title">Older brother</div>
                         <div class="node-chinese">哥哥</div>
                         <div class="node-pinyin">Gēge</div>
                     </div>
                     <div class="node node-you">
-                        <!-- Image slot for You -->
-                        <img src="https://placehold.co/64x64/4a5568/a0aec0?text=我" alt="Your photo" class="profile-image" />
                         <div class="node-title">You</div>
                         <div class="node-chinese">我</div>
                         <div class="node-pinyin">Wǒ</div>
                     </div>
                     <div class="node node-paternal">
-                        <!-- Image slot for Younger brother -->
-                        <img src="https://placehold.co/64x64/4a5568/a0aec0?text=弟弟" alt="Younger brother's photo" class="profile-image" />
                         <div class="node-title">Younger brother</div>
                         <div class="node-chinese">弟弟</div>
                         <div class="node-pinyin">Dìdi</div>
                     </div>
                     <i class="fas fa-heart text-red-500 mx-2"></i>
                     <div class="node node-paternal">
-                        <!-- Image slot for Younger brother's wife -->
-                        <img src="https://placehold.co/64x64/4a5568/a0aec0?text=弟妹" alt="Younger brother's wife photo" class="profile-image" />
                         <div class="node-title">Younger brother's wife</div>
                         <div class="node-chinese">弟妹</div>
                         <div class="node-pinyin">Dìmèi</div>
                     </div>
                     <div class="node node-paternal">
-                        <!-- Image slot for Older sister -->
-                        <img src="https://placehold.co/64x64/4a5568/a0aec0?text=姐姐" alt="Older sister's photo" class="profile-image" />
                         <div class="node-title">Older sister</div>
                         <div class="node-chinese">姐姐</div>
                         <div class="node-pinyin">Jiějie</div>
                     </div>
                     <i class="fas fa-heart text-red-500 mx-2"></i>
                     <div class="node node-paternal">
-                        <!-- Image slot for Older sister's husband -->
-                        <img src="https://placehold.co/64x64/4a5568/a0aec0?text=姐夫" alt="Older sister's husband photo" class="profile-image" />
                         <div class="node-title">Older sister's husband</div>
                         <div class="node-chinese">姐夫</div>
                         <div class="node-pinyin">Jiěfū</div>
                     </div>
                     <div class="node node-paternal">
-                        <!-- Image slot for Younger sister -->
-                        <img src="https://placehold.co/64x64/4a5568/a0aec0?text=妹妹" alt="Younger sister's photo" class="profile-image" />
                         <div class="node-title">Younger sister</div>
                         <div class="node-chinese">妹妹</div>
                         <div class="node-pinyin">Mèimei</div>
                     </div>
                     <i class="fas fa-heart text-red-500 mx-2"></i>
                     <div class="node node-paternal">
-                        <!-- Image slot for Younger sister's husband -->
-                        <img src="https://placehold.co/64x64/4a5568/a0aec0?text=妹夫" alt="Younger sister's husband photo" class="profile-image" />
                         <div class="node-title">Younger sister's husband</div>
                         <div class="node-chinese">妹夫</div>
                         <div class="node-pinyin">Mèifū</div>
@@ -476,20 +397,15 @@
                 </div>
             </div>
             
-            <!-- Cousins (Mum's side) -->
             <div class="flex flex-col items-center">
                 <div class="line-vertical"></div>
                 <div class="flex flex-wrap justify-center mt-2">
                     <div class="node node-maternal">
-                        <!-- Image slot for Male cousin (Mum's side) -->
-                        <img src="https://placehold.co/64x64/4a5568/a0aec0?text=表哥/弟" alt="Male cousin's photo" class="profile-image" />
                         <div class="node-title">Male cousin (older/younger)</div>
                         <div class="node-chinese">表哥/弟</div>
                         <div class="node-pinyin">Biǎo gē/dì</div>
                     </div>
                     <div class="node node-maternal">
-                        <!-- Image slot for Female cousin (Mum's side) -->
-                        <img src="https://placehold.co/64x64/4a5568/a0aec0?text=表姐/妹" alt="Female cousin's photo" class="profile-image" />
                         <div class="node-title">Female cousin (older/younger)</div>
                         <div class="node-chinese">表姐/妹</div>
                         <div class="node-pinyin">Biǎo jiě/mèi</div>
@@ -498,24 +414,18 @@
             </div>
         </div>
         
-        <!-- Horizontal line connecting generations -->
         <div class="line-horizontal w-full my-4"></div>
         
-        <!-- Nieces and Nephews -->
         <div class="flex justify-center items-start flex-wrap">
             <div class="flex flex-col items-center mx-4">
                 <div class="line-vertical"></div>
                 <div class="flex flex-wrap justify-center mt-2">
                     <div class="node node-paternal">
-                        <!-- Image slot for Nephew (brother's son) -->
-                        <img src="https://placehold.co/64x64/4a5568/a0aec0?text=侄子" alt="Nephew's photo" class="profile-image" />
                         <div class="node-title">Nephew (brother's son)</div>
                         <div class="node-chinese">侄子</div>
                         <div class="node-pinyin">Zhízi</div>
                     </div>
                     <div class="node node-paternal">
-                        <!-- Image slot for Niece (brother's daughter) -->
-                        <img src="https://placehold.co/64x64/4a5568/a0aec0?text=侄女" alt="Niece's photo" class="profile-image" />
                         <div class="node-title">Niece (brother's daughter)</div>
                         <div class="node-chinese">侄女</div>
                         <div class="node-pinyin">Zhínǚ</div>
@@ -527,15 +437,11 @@
                 <div class="line-vertical"></div>
                 <div class="flex flex-wrap justify-center mt-2">
                     <div class="node node-maternal">
-                        <!-- Image slot for Nephew (sister's son) -->
-                        <img src="https://placehold.co/64x64/4a5568/a0aec0?text=外甥" alt="Nephew's photo" class="profile-image" />
                         <div class="node-title">Nephew (sister's son)</div>
                         <div class="node-chinese">外甥</div>
                         <div class="node-pinyin">Wàisheng</div>
                     </div>
                     <div class="node node-maternal">
-                        <!-- Image slot for Niece (sister's daughter) -->
-                        <img src="https://placehold.co/64x64/4a5568/a0aec0?text=外甥女" alt="Niece's photo" class="profile-image" />
                         <div class="node-title">Niece (sister's daughter)</div>
                         <div class="node-chinese">外甥女</div>
                         <div class="node-pinyin">Wàishengnǚ</div>
@@ -545,13 +451,11 @@
         </div>
     </div>
     
-    <!-- Chinese Family Term Glossary -->
     <div class="container mx-auto max-w-7xl mt-12">
         <h2 class="text-2xl md:text-3xl font-bold text-center mb-6 text-blue-400">
             Glossary of Family Terms
         </h2>
         
-        <!-- Table for Immediate Family -->
         <h3 class="text-xl font-semibold mt-8 mb-4">Immediate Family Members 直系亲属</h3>
         <div class="glossary-table">
             <div class="glossary-header glossary-row">
@@ -627,7 +531,6 @@
             </div>
         </div>
 
-        <!-- Table for Grandparents -->
         <h3 class="text-xl font-semibold mt-8 mb-4">Grandparents 祖父母 / 外祖父母</h3>
         <div class="glossary-table">
             <div class="glossary-header glossary-row">
@@ -681,7 +584,6 @@
             </div>
         </div>
 
-        <!-- Table for Aunts & Uncles (Paternal Side) -->
         <h3 class="text-xl font-semibold mt-8 mb-4">Aunts & Uncles (Paternal Side) 父系的叔伯姑姑</h3>
         <div class="glossary-table">
             <div class="glossary-header glossary-row">
@@ -768,7 +670,6 @@
             </div>
         </div>
 
-        <!-- Table for Aunts & Uncles (Maternal Side) -->
         <h3 class="text-xl font-semibold mt-8 mb-4">Aunts & Uncles (Maternal Side) 母系的舅舅姨妈</h3>
         <div class="glossary-table">
             <div class="glossary-header glossary-row">
@@ -833,7 +734,6 @@
             </div>
         </div>
 
-        <!-- Table for Cousins (Paternal & Maternal Side) -->
         <h3 class="text-xl font-semibold mt-8 mb-4">Cousins 堂表兄弟姐妹</h3>
         <div class="glossary-table">
             <div class="glossary-header glossary-row">
@@ -931,7 +831,6 @@
             </div>
         </div>
 
-        <!-- Table for Nieces & Nephews -->
         <h3 class="text-xl font-semibold mt-8 mb-4">Nieces & Nephews 侄子外甥</h3>
         <div class="glossary-table">
             <div class="glossary-header glossary-row">
@@ -987,7 +886,6 @@
 
     </div>
     
-    <!-- Resources Section -->
     <div class="container mx-auto max-w-7xl mt-12 text-center text-gray-400">
         <p class="mb-2">These are the used resources/应用：</p>
         <ul class="list-none p-0">

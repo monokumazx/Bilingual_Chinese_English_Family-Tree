@@ -197,8 +197,11 @@
                 // Cancel any previous speech
                 window.speechSynthesis.cancel();
                 
+                // Sanitize the text by replacing apostrophes, as they can cause playback issues.
+                const sanitizedText = text.replace(/'/g, '');
+
                 // Create a new utterance
-                const utterance = new SpeechSynthesisUtterance(text);
+                const utterance = new SpeechSynthesisUtterance(sanitizedText);
                 
                 // Set the language
                 utterance.lang = lang;

@@ -24,8 +24,11 @@
 <body class="bg-gray-100 p-4">
 
     <div class="container">
+        <!-- 导航菜单 -->
         <nav class="flex justify-center gap-4 mb-6">
+            <!-- 确保家谱图表页面的链接正确 -->
             <a href="index.html" class="px-4 py-2 font-bold text-white bg-indigo-500 rounded-lg shadow-md hover:bg-indigo-600 transition duration-300">家谱图表</a>
+            <!-- 确保家谱词汇表页面的链接正确 -->
             <a href="family_tree_glossary.html" class="px-4 py-2 font-bold text-gray-700 bg-gray-200 rounded-lg shadow-md hover:bg-gray-300 transition duration-300">家谱词汇表</a>
         </nav>
 
@@ -34,34 +37,11 @@
             <p class="mt-2 text-gray-500">使用SVG创建的简单家谱示例</p>
         </header>
 
+        <!-- SVG图表容器 -->
         <div id="chart-container" class="inline-block w-full h-auto p-4 overflow-x-auto border-2 rounded-lg border-gray-200">
-            <svg id="family-tree" width="100%" height="auto" viewBox="0 0 1000 800">
-                </svg>
+            <img src="Family-Tree_Diagram.svg" alt="家谱图表" class="w-full h-auto rounded-lg shadow-md" />
         </div>
     </div>
 
-    <script src="https://d3js.org/d3.v7.min.js"></script>
-    <script>
-        // 缩放和平移功能脚本
-        const svg = d3.select("#family-tree");
-        const chartContainer = d3.select("#chart-container");
-        
-        // 创建一个用于缩放和平移的群组
-        const g = svg.append("g");
-        
-        // 将SVG内容移动到这个群组中，以便于缩放
-        // 你需要把你的SVG内容选择出来，例如：d3.selectAll("#family-tree > g") 或 d3.selectAll("#family-tree > rect") 等
-        // 然后把它append到新创建的g中
-        // 简单起见，我们假设你已经把内容直接粘贴到<svg>标签中了
-        // 我们可以直接操作<svg>，但为了最佳实践，最好使用一个群组
-        
-        const zoom = d3.zoom()
-            .on("zoom", (event) => {
-                g.attr("transform", event.transform);
-            });
-            
-        // 将缩放和平移行为应用到容器上
-        chartContainer.call(zoom);
-    </script>
 </body>
 </html>

@@ -77,6 +77,12 @@
 <body class="bg-gray-100 p-4">
 
     <div class="container">
+        <!-- 导航菜单 -->
+        <nav class="flex justify-center gap-4 mb-6">
+            <a href="index.html" class="px-4 py-2 font-bold text-gray-700 bg-gray-200 rounded-lg shadow-md hover:bg-gray-300 transition duration-300">家谱图表</a>
+            <a href="family_tree_glossary.html" class="px-4 py-2 font-bold text-white bg-indigo-500 rounded-lg shadow-md hover:bg-indigo-600 transition duration-300">家谱词汇表</a>
+        </nav>
+
         <header class="flex justify-center mb-6">
             <h1 class="text-3xl font-bold text-gray-800">中英家谱词汇表</h1>
         </header>
@@ -228,30 +234,37 @@
                 // 添加该分类下的所有词汇
                 glossaryData[category].forEach(item => {
                     const row = document.createElement('tr');
+                    
+                    // 将文本内容作为 data-* 属性存储，以供事件监听器使用
+                    const chineseWord = item.中文;
+                    const englishWord = item.英文;
+                    const chineseDesc = item.描述.zh;
+                    const englishDesc = item.描述.en;
+
                     row.innerHTML = `
                         <td>
-                            ${item.中文}
-                            <svg class="speaker-icon inline-block" onclick="speakText('${item.中文}', 'zh-CN')" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                            ${chineseWord}
+                            <svg class="speaker-icon inline-block" data-text="${chineseWord}" data-lang="zh-CN" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
                                 <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.81 5 3.54 5 6.71s-2.11 5.9-5 6.71v2.06c4.01-.91 7-4.46 7-8.77s-2.99-7.86-7-8.77z"/>
                             </svg>
                             <span class="pinyin-text">${item.pinyin}</span>
                         </td>
                         <td>
-                            ${item.英文}
-                            <svg class="speaker-icon inline-block" onclick="speakText('${item.英文}', 'en-US')" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                            ${englishWord}
+                            <svg class="speaker-icon inline-block" data-text="${englishWord}" data-lang="en-US" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
                                 <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.81 5 3.54 5 6.71s-2.11 5.9-5 6.71v2.06c4.01-.91 7-4.46 7-8.77s-2.99-7.86-7-8.77z"/>
                             </svg>
                         </td>
                         <td>
                             <div class="mb-2">
-                                ${item.描述.zh}
-                                <svg class="speaker-icon inline-block" onclick="speakText('${item.描述.zh}', 'zh-CN')" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                                ${chineseDesc}
+                                <svg class="speaker-icon inline-block" data-text="${chineseDesc}" data-lang="zh-CN" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
                                     <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.81 5 3.54 5 6.71s-2.11 5.9-5 6.71v2.06c4.01-.91 7-4.46 7-8.77s-2.99-7.86-7-8.77z"/>
                                 </svg>
                             </div>
                             <div class="text-gray-500">
-                                ${item.描述.en}
-                                <svg class="speaker-icon inline-block" onclick="speakText('${item.描述.en}', 'en-US')" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                                ${englishDesc}
+                                <svg class="speaker-icon inline-block" data-text="${englishDesc}" data-lang="en-US" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
                                     <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.81 5 3.54 5 6.71s-2.11 5.9-5 6.71v2.06c4.01-.91 7-4.46 7-8.77s-2.99-7.86-7-8.77z"/>
                                 </svg>
                             </div>
@@ -265,8 +278,17 @@
         // 页面加载完成后执行
         window.onload = function() {
             generateGlossaryTable();
+            
+            // 为所有带有 .speaker-icon 类的元素添加点击事件监听器
+            const speakerIcons = document.querySelectorAll('.speaker-icon');
+            speakerIcons.forEach(icon => {
+                icon.addEventListener('click', () => {
+                    const text = icon.getAttribute('data-text');
+                    const lang = icon.getAttribute('data-lang');
+                    speakText(text, lang);
+                });
+            });
         };
     </script>
-
 </body>
 </html>

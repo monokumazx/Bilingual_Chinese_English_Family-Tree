@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中英家谱词汇表</title>
+    <!-- 使用 Tailwind CSS 来美化界面 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7fafc;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background-color: #ffffff;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+        /* 表格样式 */
+        .glossary-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.875rem;
+        }
+        .glossary-table th, .glossary-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .glossary-table th {
+            background-color: #f1f5f9;
+            font-weight: bold;
+            color: #2d3748;
+        }
+        .glossary-table tbody tr:hover {
+            background-color: #f7fafc;
+        }
+        .category-heading {
+            background-color: #e0e7ff;
+            color: #4c51bf;
+            font-weight: bold;
+            padding: 0.75rem;
+            text-align: center;
+            border-radius: 0.5rem;
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        .category-remark {
+            padding: 0.75rem 1.5rem;
+            font-size: 0.875rem;
+            color: #4a5568;
+            background-color: #f0f4ff;
+            border-left: 4px solid #4c51bf;
+            border-radius: 0.25rem;
+            margin-bottom: 1rem;
+        }
+        .speaker-icon {
+            cursor: pointer;
+            margin-left: 0.5rem;
+            transition: transform 0.1s ease-in-out;
+        }
+        .speaker-icon:hover {
+            transform: scale(1.1);
+        }
+        .pinyin-text {
+            display: block;
+            font-size: 0.75rem;
+            color: #6b7280;
+            margin-top: 0.25rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-4">
+
+    <div class="container">
+        <header class="flex justify-center mb-6">
+            <h1 class="text-3xl font-bold text-gray-800">中英家谱词汇表</h1>
+        </header>
+
+        <div class="overflow-x-auto">
+            <table class="glossary-table">
+                <thead>
+                    <tr>
+                        <th class="rounded-tl-lg">中文 Chinese</th>
+                        <th>英文 English</th>
+                        <th class="rounded-tr-lg">描述 Description</th>
+                    </tr>
+                </thead>
+                <tbody id="glossary-table-body">
+                    <!-- 词汇表内容将通过 JavaScript 动态生成 -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // 词汇表数据，已将你的.docx文件内容整理并分类为JavaScript数组
+        const glossaryData = {
+            '祖父母辈 (Grandparents Generation)': [
+                {中文: '曾祖父', pinyin: 'zēng zǔ fù', 英文: 'great-grandfather', 描述: {zh: '父亲的祖父', en: 'Father’s grandfather'}},
+                {中文: '曾祖母', pinyin: 'zēng zǔ mǔ', 英文: 'great-grandmother', 描述: {zh: '父亲的祖母', en: 'Father’s grandmother'}},
+                {中文: '伯公', pinyin: 'bó gōng', 英文: 'granduncle', 描述: {zh: '父亲的伯父（年长的兄弟）', en: 'Father’s elder uncle'}},
+                {中文: '伯婆', pinyin: 'bó pó', 英文: 'grandaunt', 描述: {zh: '伯公的妻子', en: 'Wife of father’s elder uncle'}},
+                {中文: '叔公', pinyin: 'shū gōng', 英文: 'granduncle', 描述: {zh: '父亲的叔叔（年幼的兄弟）。在粤语、闽南语等方言中，读作jǔ公。', en: 'Father’s younger uncle. In dialects such as Cantonese and Hokkien, it is pronounced jǔ gōng.'}},
+                {中文: '叔婆', pinyin: 'shū pó', 英文: 'grandaunt', 描述: {zh: '叔公的妻子', en: 'Wife of father’s younger uncle'}},
+                {中文: '姑婆', pinyin: 'gū pó', 英文: 'grandaunt', 描述: {zh: '父亲的姑母', en: 'Father’s aunt'}},
+                {中文: '姑丈公', pinyin: 'gū zhàng gōng', 英文: 'granduncle (by marriage)', 描述: {zh: '姑妈/姑姑的丈夫', en: 'Husband of father’s aunt'}},
+                {中文: '爷爷', pinyin: 'yé yé', 英文: 'grandfather', 描述: {zh: '父亲的父亲', en: 'Father’s father'}},
+                {中文: '奶奶', pinyin: 'nǎi nai', 英文: 'grandmother', 描述: {zh: '父亲的母亲', en: 'Mother’s mother'}},
+                {中文: '外曾祖父', pinyin: 'wài zēng zǔ fù', 英文: 'great-grandfather', 描述: {zh: '母亲的祖父', en: 'Mother’s grandfather'}},
+                {中文: '外曾祖母', pinyin: 'wài zēng zǔ mǔ', 英文: 'great-grandmother', 描述: {zh: '母亲的祖母', en: 'Mother’s grandmother'}},
+                {中文: '舅公', pinyin: 'jiù gōng', 英文: 'granduncle', 描述: {zh: '母亲的舅舅', en: 'Mother’s uncle'}},
+                {中文: '舅婆', pinyin: 'jiù pó', 英文: 'grandaunt', 描述: {zh: '舅公的妻子', en: 'Wife of mother’s uncle'}},
+                {中文: '姨婆', pinyin: 'yí pó', 英文: 'grandaunt', 描述: {zh: '母亲的姨妈', en: 'Mother’s aunt'}},
+                {中文: '姨丈公', pinyin: 'yí zhàng gōng', 英文: 'granduncle (by marriage)', 描述: {zh: '姨婆的丈夫', en: 'Husband of mother’s aunt'}},
+                {中文: '外祖父', pinyin: 'wài zǔ fù', 英文: 'maternal grandfather', 描述: {zh: '母亲的父亲', en: 'Mother’s father'}},
+                {中文: '外祖母', pinyin: 'wài zǔ mǔ', 英文: 'maternal grandmother', 描述: {zh: '母亲的母亲', en: 'Mother’s mother'}},
+            ],
+            '父母及兄弟姐妹辈 (Parents & Siblings Generation)': [
+                {中文: '父亲', pinyin: 'fù qīn', 英文: 'father', 描述: {zh: '你爸爸', en: 'Your father'}},
+                {中文: '母亲', pinyin: 'mǔ qīn', 英文: 'mother', 描述: {zh: '你妈妈', en: 'Your mother'}},
+                {中文: '你', pinyin: 'nǐ', 英文: 'you / self', 描述: {zh: '本人', en: 'Yourself'}},
+                // 兄弟姐妹
+                {中文: '哥哥', pinyin: 'gē ge', 英文: 'older brother', 描述: {zh: '你哥哥', en: 'Your older brother'}},
+                {中文: '嫂子', pinyin: 'sǎo zi', 英文: 'older brother\'s wife', 描述: {zh: '你哥哥的妻子', en: 'Your older brother\'s wife'}},
+                {中文: '弟弟', pinyin: 'dì di', 英文: 'younger brother', 描述: {zh: '你弟弟', en: 'Your younger brother'}},
+                {中文: '弟妹', pinyin: 'dì mèi', 英文: 'younger brother\'s wife', 描述: {zh: '你弟弟的妻子', en: 'Your younger brother\'s wife'}},
+                {中文: '姐姐', pinyin: 'jiě jie', 英文: 'older sister', 描述: {zh: '你姐姐', en: 'Your older sister'}},
+                {中文: '姐夫', pinyin: 'jiě fū', 英文: 'older sister\'s husband', 描述: {zh: '你姐姐的丈夫', en: 'Your older sister\'s husband'}},
+                {中文: '妹妹', pinyin: 'mèi mei', 英文: 'younger sister', 描述: {zh: '你妹妹', en: 'Your younger sister'}},
+                {中文: '妹夫', pinyin: 'mèi fū', 英文: 'younger sister\'s husband', 描述: {zh: '你妹妹的丈夫', en: 'Your younger sister\'s husband'}},
+                // 父亲的兄弟姐妹
+                {中文: '伯伯', pinyin: 'bó bo', 英文: 'paternal uncle (older)', 描述: {zh: '父亲的哥哥', en: 'Father\'s older brother'}},
+                {中文: '伯母', pinyin: 'bó mǔ', 英文: 'wife of paternal uncle (older)', 描述: {zh: '伯伯的妻子', en: 'Wife of father\'s older brother'}},
+                {中文: '叔叔 / 叔父', pinyin: 'shū shu / shū fù', 英文: 'paternal uncle (younger)', 描述: {zh: '父亲的弟弟', en: 'Father\'s younger brother'}},
+                {中文: '婶婶', pinyin: 'shěn shen', 英文: 'wife of paternal uncle (younger)', 描述: {zh: '叔叔/叔父的妻子', en: 'Wife of father\'s younger brother'}},
+                {中文: '姑姑 / 姑妈', pinyin: 'gū gu / gū mā', 英文: 'paternal aunt', 描述: {zh: '父亲的姐妹', en: 'Father\'s sister'}},
+                {中文: '姑丈 / 姑父', pinyin: 'gū zhàng / gū fù', 英文: 'paternal aunt\'s husband', 描述: {zh: '姑姑/姑妈的丈夫', en: 'Husband of father\'s sister'}},
+                // 母亲的兄弟姐妹
+                {中文: '舅舅 / 舅父', pinyin: 'jiù jiu / jiù fù', 英文: 'maternal uncle', 描述: {zh: '母亲的兄弟', en: 'Mother\'s brother'}},
+                {中文: '舅妈 / 舅母', pinyin: 'jiù mā / jiù mǔ', 英文: 'maternal uncle\'s wife', 描述: {zh: '舅舅/舅父的妻子', en: 'Wife of mother\'s brother'}},
+                {中文: '姨妈 / 姨姨', pinyin: 'yí mā / yí yí', 英文: 'maternal aunt', 描述: {zh: '母亲的姐妹', en: 'Mother\'s sister'}},
+                {中文: '姨丈', pinyin: 'yí zhàng', 英文: 'maternal aunt\'s husband', 描述: {zh: '姨妈/姨姨的丈夫', en: 'Husband of mother\'s sister'}},
+            ],
+            '堂/表兄弟姐妹辈 (Cousins Generation)': [
+                {中文: '堂兄', pinyin: 'táng xiōng', 英文: 'older male paternal cousin', 描述: {zh: '伯叔的儿子', en: 'Son of father’s brother'}},
+                {中文: '堂嫂', pinyin: 'táng sǎo', 英文: 'wife of older paternal cousin', 描述: {zh: '堂兄的妻子', en: 'Wife of older paternal cousin'}},
+                {中文: '堂弟', pinyin: 'táng dì', 英文: 'younger male paternal cousin', 描述: {zh: '伯叔的儿子（比自己年轻）', en: 'Younger son of father’s brother'}},
+                {中文: '堂弟媳', pinyin: 'táng dì xí', 英文: 'wife of younger paternal cousin', 描述: {zh: '堂弟的妻子', en: 'Wife of younger paternal cousin'}},
+                {中文: '堂姐', pinyin: 'táng jiě', 英文: 'older female paternal cousin', 描述: {zh: '伯叔的女儿', en: 'Daughter of father’s brother'}},
+                {中文: '堂姐夫', pinyin: 'táng jiě fū', 英文: 'husband of older paternal cousin', 描述: {zh: '堂姐的丈夫', en: 'Husband of older paternal cousin'}},
+                {中文: '堂妹', pinyin: 'táng mèi', 英文: 'younger female paternal cousin', 描述: {zh: '伯叔的女儿（比自己年轻）', en: 'Younger daughter of father’s brother'}},
+                {中文: '堂妹夫', pinyin: 'táng mèi fū', 英文: 'husband of younger paternal cousin', 描述: {zh: '堂妹的丈夫', en: 'Husband of younger paternal cousin'}},
+                {中文: '表兄', pinyin: 'biǎo xiōng', 英文: 'older male maternal cousin', 描述: {zh: '舅姨的儿子', en: 'Son of mother’s sibling'}},
+                {中文: '表弟', pinyin: 'biǎo dì', 英文: 'younger male maternal cousin', 描述: {zh: '舅姨的儿子（比自己年轻）', en: 'Younger son of mother’s sibling'}},
+                {中文: '表姐', pinyin: 'biǎo jiě', 英文: 'older female maternal cousin', 描述: {zh: '舅姨的女儿', en: 'Daughter of mother’s sibling'}},
+                {中文: '表妹', pinyin: 'biǎo mèi', 英文: 'younger female maternal cousin', 描述: {zh: '舅姨的女儿（比自己年轻）', en: 'Younger daughter of mother’s sibling'}},
+            ],
+             '子女及孙辈 (Children & Grandchildren Generation)': [
+                {中文: '儿子', pinyin: 'ér zi', 英文: 'son', 描述: {zh: '你的儿子', en: 'Your son'}},
+                {中文: '女儿', pinyin: 'nǚ ér', 英文: 'daughter', 描述: {zh: '你的女儿', en: 'Your daughter'}},
+                {中文: '儿媳', pinyin: 'ér xí', 英文: 'daughter-in-law', 描述: {zh: '你儿子的妻子', en: 'Your son\'s wife'}},
+                {中文: '女婿', pinyin: 'nǚ xù', 英文: 'son-in-law', 描述: {zh: '你女儿的丈夫', en: 'Your daughter\'s husband'}},
+                {中文: '孙子', pinyin: 'sūn zi', 英文: 'paternal grandson', 描述: {zh: '你儿子的儿子', en: 'Your son\'s son'}},
+                {中文: '孙女', pinyin: 'sūn nǚ', 英文: 'paternal granddaughter', 描述: {zh: '你儿子的女儿', en: 'Your son\'s daughter'}},
+                {中文: '外孙', pinyin: 'wài sūn', 英文: 'maternal grandson', 描述: {zh: '你女儿的儿子', en: 'Your daughter\'s son'}},
+                {中文: '外孙女', pinyin: 'wài sūn nǚ', 英文: 'maternal granddaughter', 描述: {zh: '你女儿的女儿', en: 'Your daughter\'s daughter'}},
+                {中文: '侄子', pinyin: 'zhí zi', 英文: 'paternal nephew', 描述: {zh: '你兄弟的儿子', en: 'Your brother\'s son'}},
+                {中文: '侄女', pinyin: 'zhí nǚ', 英文: 'paternal niece', 描述: {zh: '你兄弟的女儿', en: 'Your brother\'s daughter'}},
+                {中文: '外甥', pinyin: 'wài shēng', 英文: 'maternal nephew', 描述: {zh: '你姐妹的儿子', en: 'Your sister\'s son'}},
+                {中文: '外甥女', pinyin: 'wài shēng nǚ', 英文: 'maternal niece', 描述: {zh: '你姐妹的女儿', en: 'Your sister\'s daughter'}},
+                // 新增：堂兄弟的儿女
+                {中文: '从侄', pinyin: 'cóng zhí', 英文: 'son of paternal male cousin', 描述: {zh: '你的堂兄弟的儿子', en: 'Son of your paternal male cousin'}},
+                {中文: '从侄女', pinyin: 'cóng zhí nǚ', 英文: 'daughter of paternal male cousin', 描述: {zh: '你的堂兄弟的女儿', en: 'Daughter of your paternal male cousin'}},
+                // 表兄弟姐妹的孩子
+                {中文: '表侄子', pinyin: 'biǎo zhí zi', 英文: 'cousin\'s son (paternal)', 描述: {zh: '你的堂/表兄的儿子', en: 'Son of your paternal cousin'}},
+                {中文: '表侄女', pinyin: 'biǎo zhí nǚ', 英文: 'cousin\'s daughter (paternal)', 描述: {zh: '你的堂/表兄的女儿', en: 'Daughter of your paternal cousin'}},
+                {中文: '表外甥', pinyin: 'biǎo wài shēng', 英文: 'cousin\'s son (maternal)', 描述: {zh: '你的堂/表姐的儿子', en: 'Son of your maternal cousin'}},
+                {中文: '表外甥女', pinyin: 'biǎo wài shēng nǚ', 英文: 'cousin\'s daughter (maternal)', 描述: {zh: '你的堂/表姐的女儿', en: 'Daughter of your maternal cousin'}},
+            ]
+        };
+
+        // 语音播放功能
+        function speakText(text, lang) {
+            // Check for browser support
+            if ('speechSynthesis' in window) {
+                // Cancel any previous speech
+                window.speechSynthesis.cancel();
+                
+                // Create a new utterance
+                const utterance = new SpeechSynthesisUtterance(text);
+                
+                // Set the language
+                utterance.lang = lang;
+                
+                // Speak the text
+                window.speechSynthesis.speak(utterance);
+            } else {
+                // If the browser doesn't support the Web Speech API
+                console.error('Web Speech API is not supported in this browser.');
+                // You can add a visual alert here if needed
+                // alert('您的浏览器不支持语音功能。');
+            }
+        }
+
+        // 动态生成词汇表表格
+        function generateGlossaryTable() {
+            const tableBody = document.querySelector('#glossary-table-body');
+            tableBody.innerHTML = ''; // 清空现有内容
+
+            for (const category in glossaryData) {
+                // 添加分类标题
+                const categoryRow = document.createElement('tr');
+                categoryRow.innerHTML = `<td colspan="3"><div class="category-heading">${category}</div></td>`;
+                tableBody.appendChild(categoryRow);
+
+                // 添加备注（仅针对“堂/表兄弟姐妹辈”类别）
+                if (category === '堂/表兄弟姐妹辈 (Cousins Generation)') {
+                    const remarkRow = document.createElement('tr');
+                    remarkRow.innerHTML = `<td colspan="3"><div class="category-remark">备注：家谱中，带“堂”字的通常指父亲这边的亲戚，因为他们与你共享一个祖父，所以通常与你同姓。带“表”字的则通常指母亲那边的亲戚，他们随母亲的丈夫的姓氏，因此姓氏可能与你不同。<br/><br/>(In a family tree, "táng" (堂) generally refers to relatives on your father's side. They usually share the same surname as you because they share a common paternal grandfather. "Biǎo" (表) generally refers to relatives on your mother's side. They take their father's surname, which is often different from yours.)</div></td>`;
+                    tableBody.appendChild(remarkRow);
+                }
+
+                // 添加该分类下的所有词汇
+                glossaryData[category].forEach(item => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>
+                            ${item.中文}
+                            <svg class="speaker-icon inline-block" onclick="speakText('${item.中文}', 'zh-CN')" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                                <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.81 5 3.54 5 6.71s-2.11 5.9-5 6.71v2.06c4.01-.91 7-4.46 7-8.77s-2.99-7.86-7-8.77z"/>
+                            </svg>
+                            <span class="pinyin-text">${item.pinyin}</span>
+                        </td>
+                        <td>
+                            ${item.英文}
+                            <svg class="speaker-icon inline-block" onclick="speakText('${item.英文}', 'en-US')" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                                <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.81 5 3.54 5 6.71s-2.11 5.9-5 6.71v2.06c4.01-.91 7-4.46 7-8.77s-2.99-7.86-7-8.77z"/>
+                            </svg>
+                        </td>
+                        <td>
+                            <div class="mb-2">
+                                ${item.描述.zh}
+                                <svg class="speaker-icon inline-block" onclick="speakText('${item.描述.zh}', 'zh-CN')" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                                    <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.81 5 3.54 5 6.71s-2.11 5.9-5 6.71v2.06c4.01-.91 7-4.46 7-8.77s-2.99-7.86-7-8.77z"/>
+                                </svg>
+                            </div>
+                            <div class="text-gray-500">
+                                ${item.描述.en}
+                                <svg class="speaker-icon inline-block" onclick="speakText('${item.描述.en}', 'en-US')" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                                    <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.81 5 3.54 5 6.71s-2.11 5.9-5 6.71v2.06c4.01-.91 7-4.46 7-8.77s-2.99-7.86-7-8.77z"/>
+                                </svg>
+                            </div>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            }
+        }
+
+        // 页面加载完成后执行
+        window.onload = function() {
+            generateGlossaryTable();
+        };
+    </script>
+
+</body>
+</html>

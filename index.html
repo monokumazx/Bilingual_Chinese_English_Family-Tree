@@ -39,30 +39,67 @@
             <button id="zoom-out" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition duration-300">-</button>
         </div>
 
-        <div id="chart-container" class="inline-block w-full h-auto p-4 overflow-x-auto border-2 rounded-lg border-gray-200">
-            <img id="family-tree-image" src="Family-Tree_Diagram(png).png" alt="家谱图表" class="w-full h-auto rounded-lg shadow-md transition-transform duration-300 ease-in-out" />
+        <div id="chart-container" class="inline-block w-full h-auto p-4 border-2 rounded-lg border-gray-200 cursor-grab">
+            <img id="family-tree-image" src="Family-Tree_Diagram.png" alt="家谱图表" class="w-full h-auto rounded-lg shadow-md transition-transform duration-300 ease-in-out" />
         </div>
     </div>
 
     <script>
         const image = document.getElementById('family-tree-image');
+        const container = document.getElementById('chart-container');
         const zoomInButton = document.getElementById('zoom-in');
         const zoomOutButton = document.getElementById('zoom-out');
+        
         let currentScale = 1;
+        let isDragging = false;
+        let startX, startY;
+        let imgX = 0, imgY = 0;
 
+        // 放大功能
         zoomInButton.addEventListener('click', () => {
             currentScale += 0.2;
-            image.style.transform = `scale(${currentScale})`;
+            image.style.transform = `scale(${currentScale}) translate(${imgX}px, ${imgY}px)`;
             image.style.transformOrigin = '0 0';
         });
 
+        // 缩小功能
         zoomOutButton.addEventListener('click', () => {
             if (currentScale > 0.2) {
                 currentScale -= 0.2;
-                image.style.transform = `scale(${currentScale})`;
+                image.style.transform = `scale(${currentScale}) translate(${imgX}px, ${imgY}px)`;
                 image.style.transformOrigin = '0 0';
             }
         });
+
+        // 拖拽平移功能
+        container.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            container.style.cursor = 'grabbing';
+            startX = e.clientX - imgX;
+            startY = e.clientY - imgY;
+            image.style.transition = 'none'; // 拖拽时禁用过渡效果
+        });
+
+        container.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            imgX = e.clientX - startX;
+            imgY = e.clientY - startY;
+            image.style.transform = `scale(${currentScale}) translate(${imgX}px, ${imgY}px)`;
+        });
+
+        container.addEventListener('mouseup', () => {
+            isDragging = false;
+            container.style.cursor = 'grab';
+            image.style.transition = 'transform 0.3s ease-in-out'; // 拖拽结束后恢复过渡效果
+        });
+        
+        // 当鼠标离开容器时也停止拖拽，避免出现bug
+        container.addEventListener('mouseleave', () => {
+            isDragging = false;
+            container.style.cursor = 'grab';
+            image.style.transition = 'transform 0.3s ease-in-out';
+        });
+
     </script>
 
 </body>

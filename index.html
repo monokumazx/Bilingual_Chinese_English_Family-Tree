@@ -1,969 +1,272 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chinese Family Tree</title>
+    <title>中英家谱词汇表</title>
+    <!-- 使用 Tailwind CSS 来美化界面 -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #1a202c; /* Dark background */
-            color: #e2e8f0; /* Light text */
+            background-color: #f7fafc;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 2rem auto;
             padding: 2rem;
+            background-color: #ffffff;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
         }
-        .node {
-            border-radius: 12px;
-            padding: 1rem;
-            margin: 0.5rem;
-            text-align: center;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-width: 120px;
-        }
-        .node-paternal {
-            background-color: #2d3748; /* Blue-ish dark background */
-        }
-        .node-maternal {
-            background-color: #482d37; /* Red-ish dark background */
-        }
-        .node-you {
-            background-color: #2b6cb0; /* Blue for 'You' node */
-            border: 4px solid #4299e1;
-        }
-        .node-title {
-            font-size: 1rem;
-            font-weight: 500;
-            color: #cbd5e0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .node-chinese {
-            font-size: 1.25rem;
-            font-weight: 700;
-            margin: 0.25rem 0;
-            color: #f7fafc;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .node-pinyin {
-            font-size: 0.875rem;
-            color: #a0aec0;
-        }
-        .line-vertical {
-            width: 2px;
-            height: 20px;
-            background-color: #4a5568;
-            margin: 0 auto;
-        }
-        .line-horizontal {
-            height: 2px;
-            background-color: #4a5568;
-            width: 100%;
-        }
-        .connector {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-        }
-        .connector-parent {
-            flex-grow: 1;
-            padding-top: 20px;
-        }
-        .connector-child {
-            flex-grow: 1;
-        }
-        .relative-container {
-            position: relative;
-        }
-        .heart {
-            color: #e53e3e;
-            margin: 0 0.5rem;
-        }
-        .profile-image {
-            width: 64px;
-            height: 64px;
-            border-radius: 9999px;
-            object-fit: cover;
-            margin-bottom: 8px;
-            background-color: #4a5568;
-        }
+        /* 表格样式 */
         .glossary-table {
-            background-color: #2d3748;
-            border-radius: 12px;
-            overflow: hidden;
             width: 100%;
+            border-collapse: collapse;
+            font-size: 0.875rem;
         }
-        .glossary-header {
-            background-color: #4a5568;
-            font-weight: 700;
-        }
-        .glossary-row {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 1rem;
+        .glossary-table th, .glossary-table td {
             padding: 1rem;
-            border-bottom: 1px solid #4a5568;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
         }
-        .glossary-row:last-child {
-            border-bottom: none;
+        .glossary-table th {
+            background-color: #f1f5f9;
+            font-weight: bold;
+            color: #2d3748;
         }
-        .glossary-char {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
+        .glossary-table tbody tr:hover {
+            background-color: #f7fafc;
         }
-        .glossary-pinyin {
+        .category-heading {
+            background-color: #e0e7ff;
+            color: #4c51bf;
+            font-weight: bold;
+            padding: 0.75rem;
+            text-align: center;
+            border-radius: 0.5rem;
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        .category-remark {
+            padding: 0.75rem 1.5rem;
             font-size: 0.875rem;
-            color: #a0aec0;
+            color: #4a5568;
+            background-color: #f0f4ff;
+            border-left: 4px solid #4c51bf;
+            border-radius: 0.25rem;
+            margin-bottom: 1rem;
         }
-        .glossary-explanation-chinese {
-            font-size: 0.875rem;
-            color: #a0aec0;
-            margin-top: 0.25rem;
-        }
-        .play-icon {
+        .speaker-icon {
             cursor: pointer;
-            margin-left: 8px;
-            color: #4299e1;
+            margin-left: 0.5rem;
+            transition: transform 0.1s ease-in-out;
+        }
+        .speaker-icon:hover {
+            transform: scale(1.1);
+        }
+        .pinyin-text {
+            display: block;
+            font-size: 0.75rem;
+            color: #6b7280;
+            margin-top: 0.25rem;
         }
     </style>
 </head>
-<body class="bg-gray-900 text-gray-200 p-8">
+<body class="bg-gray-100 p-4">
 
-    <div class="container mx-auto max-w-7xl">
-        <h1 class="text-3xl md:text-4xl lg:text-5xl font-extrabold text-center mb-12 text-blue-400 tracking-wider">
-            Chinese Family Tree 家谱
-        </h1>
+    <div class="container">
+        <header class="flex justify-center mb-6">
+            <h1 class="text-3xl font-bold text-gray-800">中英家谱词汇表</h1>
+        </header>
 
-        <!-- Grandparents -->
-        <div class="flex justify-center items-end relative mb-8 flex-wrap">
-            <div class="flex items-end mx-8">
-                <div class="connector-parent">
-                    <div class="flex justify-center">
-                        <div class="node node-paternal">
-                            <div class="node-title">Grandfather<i class="fas fa-volume-up play-icon" onclick="speak('Grandfather', 'en-US')"></i></div>
-                            <div class="node-chinese">爷爷<i class="fas fa-volume-up play-icon" onclick="speak('爷爷', 'zh-CN')"></i></div>
-                            <div class="node-pinyin">Yéye</div>
-                        </div>
-                        <i class="fas fa-heart text-red-500 mx-2 mb-4"></i>
-                        <div class="node node-paternal">
-                            <div class="node-title">Grandmother<i class="fas fa-volume-up play-icon" onclick="speak('Grandmother', 'en-US')"></i></div>
-                            <div class="node-chinese">奶奶<i class="fas fa-volume-up play-icon" onclick="speak('奶奶', 'zh-CN')"></i></div>
-                            <div class="node-pinyin">Nǎinai</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="line-vertical h-12"></div>
-            <div class="flex items-end mx-8">
-                <div class="connector-parent">
-                    <div class="flex justify-center">
-                        <div class="node node-maternal">
-                            <div class="node-title">Grandmother<i class="fas fa-volume-up play-icon" onclick="speak('Grandmother', 'en-US')"></i></div>
-                            <div class="node-chinese">外婆<i class="fas fa-volume-up play-icon" onclick="speak('外婆', 'zh-CN')"></i></div>
-                            <div class="node-pinyin">Wàipó</div>
-                        </div>
-                        <i class="fas fa-heart text-red-500 mx-2 mb-4"></i>
-                        <div class="node node-maternal">
-                            <div class="node-title">Grandfather<i class="fas fa-volume-up play-icon" onclick="speak('Grandfather', 'en-US')"></i></div>
-                            <div class="node-chinese">外公<i class="fas fa-volume-up play-icon" onclick="speak('外公', 'zh-CN')"></i></div>
-                            <div class="node-pinyin">Wàigōng</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="overflow-x-auto">
+            <table class="glossary-table">
+                <thead>
+                    <tr>
+                        <th class="rounded-tl-lg">中文 Chinese</th>
+                        <th>英文 English</th>
+                        <th class="rounded-tr-lg">描述 Description</th>
+                    </tr>
+                </thead>
+                <tbody id="glossary-table-body">
+                    <!-- 词汇表内容将通过 JavaScript 动态生成 -->
+                </tbody>
+            </table>
         </div>
-
-        <div class="line-horizontal w-full my-4"></div>
-
-        <!-- Parents, Aunts & Uncles -->
-        <div class="flex justify-center items-start mb-8 flex-wrap">
-            <!-- Paternal Uncles & Aunts -->
-            <div class="flex flex-col items-center">
-                <div class="line-vertical"></div>
-                <div class="flex items-center mt-2">
-                    <div class="node node-paternal">
-                        <div class="node-title">Uncle (older brother)<i class="fas fa-volume-up play-icon" onclick="speak('Uncle older brother', 'en-US')"></i></div>
-                        <div class="node-chinese">伯伯<i class="fas fa-volume-up play-icon" onclick="speak('伯伯', 'zh-CN')"></i></div>
-                        <div class="node-pinyin">Bóbo</div>
-                    </div>
-                    <i class="fas fa-heart text-red-500 mx-2"></i>
-                    <div class="node node-paternal">
-                        <div class="node-title">Aunt (older brother's wife)<i class="fas fa-volume-up play-icon" onclick="speak('Aunt older brother\'s wife', 'en-US')"></i></div>
-                        <div class="node-chinese">伯母<i class="fas fa-volume-up play-icon" onclick="speak('伯母', 'zh-CN')"></i></div>
-                        <div class="node-pinyin">Bómǔ</div>
-                    </div>
-                </div>
-                <div class="line-vertical h-12"></div>
-            </div>
-            <div class="flex flex-col items-center">
-                <div class="line-vertical"></div>
-                <div class="flex items-center mt-2">
-                    <div class="node node-paternal">
-                        <div class="node-title">Uncle (younger brother)<i class="fas fa-volume-up play-icon" onclick="speak('Uncle younger brother', 'en-US')"></i></div>
-                        <div class="node-chinese">叔叔<i class="fas fa-volume-up play-icon" onclick="speak('叔叔', 'zh-CN')"></i></div>
-                        <div class="node-pinyin">Shūshu</div>
-                    </div>
-                    <i class="fas fa-heart text-red-500 mx-2"></i>
-                    <div class="node node-paternal">
-                        <div class="node-title">Aunt (younger brother's wife)<i class="fas fa-volume-up play-icon" onclick="speak('Aunt younger brother\'s wife', 'en-US')"></i></div>
-                        <div class="node-chinese">婶婶<i class="fas fa-volume-up play-icon" onclick="speak('婶婶', 'zh-CN')"></i></div>
-                        <div class="node-pinyin">Shěnshen</div>
-                    </div>
-                </div>
-                <div class="line-vertical h-12"></div>
-            </div>
-            <div class="flex flex-col items-center">
-                <div class="line-vertical"></div>
-                <div class="flex items-center mt-2">
-                    <div class="node node-paternal">
-                        <div class="node-title">Aunt (older sister)<i class="fas fa-volume-up play-icon" onclick="speak('Aunt older sister', 'en-US')"></i></div>
-                        <div class="node-chinese">姑妈<i class="fas fa-volume-up play-icon" onclick="speak('姑妈', 'zh-CN')"></i></div>
-                        <div class="node-pinyin">Gūmā</div>
-                    </div>
-                    <i class="fas fa-heart text-red-500 mx-2"></i>
-                    <div class="node node-paternal">
-                        <div class="node-title">Uncle (older sister's husband)<i class="fas fa-volume-up play-icon" onclick="speak('Uncle older sister\'s husband', 'en-US')"></i></div>
-                        <div class="node-chinese">姑父<i class="fas fa-volume-up play-icon" onclick="speak('姑父', 'zh-CN')"></i></div>
-                        <div class="node-pinyin">Gūfù</div>
-                    </div>
-                </div>
-                <div class="line-vertical h-12"></div>
-            </div>
-            <div class="flex flex-col items-center">
-                <div class="line-vertical"></div>
-                <div class="flex items-center mt-2">
-                    <div class="node node-paternal">
-                        <div class="node-title">Aunt (younger sister)<i class="fas fa-volume-up play-icon" onclick="speak('Aunt younger sister', 'en-US')"></i></div>
-                        <div class="node-chinese">姑姑<i class="fas fa-volume-up play-icon" onclick="speak('姑姑', 'zh-CN')"></i></div>
-                        <div class="node-pinyin">Gūgu</div>
-                    </div>
-                    <i class="fas fa-heart text-red-500 mx-2"></i>
-                    <div class="node node-paternal">
-                        <div class="node-title">Uncle (younger sister's husband)<i class="fas fa-volume-up play-icon" onclick="speak('Uncle younger sister\'s husband', 'en-US')"></i></div>
-                        <div class="node-chinese">姑父<i class="fas fa-volume-up play-icon" onclick="speak('姑父', 'zh-CN')"></i></div>
-                        <div class="node-pinyin">Gūfù</div>
-                    </div>
-                </div>
-                <div class="line-vertical h-12"></div>
-            </div>
-            
-            <!-- Horizontal line to parents -->
-            <div class="line-horizontal w-full my-4"></div>
-
-            <!-- Parents -->
-            <div class="flex flex-col items-center">
-                <div class="line-vertical"></div>
-                <div class="flex items-center mt-2">
-                    <div class="node node-paternal">
-                        <div class="node-title">Dad<i class="fas fa-volume-up play-icon" onclick="speak('Dad', 'en-US')"></i></div>
-                        <div class="node-chinese">爸爸<i class="fas fa-volume-up play-icon" onclick="speak('爸爸', 'zh-CN')"></i></div>
-                        <div class="node-pinyin">Bàba</div>
-                    </div>
-                    <i class="fas fa-heart text-red-500 mx-2"></i>
-                    <div class="node node-maternal">
-                        <div class="node-title">Mum<i class="fas fa-volume-up play-icon" onclick="speak('Mum', 'en-US')"></i></div>
-                        <div class="node-chinese">妈妈<i class="fas fa-volume-up play-icon" onclick="speak('妈妈', 'zh-CN')"></i></div>
-                        <div class="node-pinyin">Māma</div>
-                    </div>
-                </div>
-                <div class="line-vertical"></div>
-            </div>
-
-            <!-- Horizontal line from parents -->
-            <div class="line-horizontal w-full my-4"></div>
-            
-            <!-- Maternal Aunts & Uncles -->
-            <div class="flex flex-col items-center">
-                <div class="line-vertical"></div>
-                <div class="flex items-center mt-2">
-                    <div class="node node-maternal">
-                        <div class="node-title">Aunt (older sister)<i class="fas fa-volume-up play-icon" onclick="speak('Aunt older sister', 'en-US')"></i></div>
-                        <div class="node-chinese">姨妈<i class="fas fa-volume-up play-icon" onclick="speak('姨妈', 'zh-CN')"></i></div>
-                        <div class="node-pinyin">Yímā</div>
-                    </div>
-                    <i class="fas fa-heart text-red-500 mx-2"></i>
-                    <div class="node node-maternal">
-                        <div class="node-title">Uncle (older sister's husband)<i class="fas fa-volume-up play-icon" onclick="speak('Uncle older sister\'s husband', 'en-US')"></i></div>
-                        <div class="node-chinese">姨父<i class="fas fa-volume-up play-icon" onclick="speak('姨父', 'zh-CN')"></i></div>
-                        <div class="node-pinyin">Yífù</div>
-                    </div>
-                </div>
-                <div class="line-vertical h-12"></div>
-            </div>
-            <div class="flex flex-col items-center">
-                <div class="line-vertical"></div>
-                <div class="flex items-center mt-2">
-                    <div class="node node-maternal">
-                        <div class="node-title">Aunt (younger sister)<i class="fas fa-volume-up play-icon" onclick="speak('Aunt younger sister', 'en-US')"></i></div>
-                        <div class="node-chinese">阿姨<i class="fas fa-volume-up play-icon" onclick="speak('阿姨', 'zh-CN')"></i></div>
-                        <div class="node-pinyin">Āyí</div>
-                    </div>
-                    <i class="fas fa-heart text-red-500 mx-2"></i>
-                    <div class="node node-maternal">
-                        <div class="node-title">Uncle (younger sister's husband)<i class="fas fa-volume-up play-icon" onclick="speak('Uncle younger sister\'s husband', 'en-US')"></i></div>
-                        <div class="node-chinese">姨父<i class="fas fa-volume-up play-icon" onclick="speak('姨父', 'zh-CN')"></i></div>
-                        <div class="node-pinyin">Yífù</div>
-                    </div>
-                </div>
-                <div class="line-vertical h-12"></div>
-            </div>
-            <div class="flex flex-col items-center">
-                <div class="line-vertical"></div>
-                <div class="flex items-center mt-2">
-                    <div class="node node-maternal">
-                        <div class="node-title">Uncle (older or younger brother)<i class="fas fa-volume-up play-icon" onclick="speak('Uncle older or younger brother', 'en-US')"></i></div>
-                        <div class="node-chinese">舅舅<i class="fas fa-volume-up play-icon" onclick="speak('舅舅', 'zh-CN')"></i></div>
-                        <div class="node-pinyin">Jiùjiu</div>
-                    </div>
-                    <i class="fas fa-heart text-red-500 mx-2"></i>
-                    <div class="node node-maternal">
-                        <div class="node-title">Brother's wife<i class="fas fa-volume-up play-icon" onclick="speak('Brother\'s wife', 'en-US')"></i></div>
-                        <div class="node-chinese">舅母<i class="fas fa-volume-up play-icon" onclick="speak('舅母', 'zh-CN')"></i></div>
-                        <div class="node-pinyin">Jiùmǔ</div>
-                    </div>
-                </div>
-                <div class="line-vertical h-12"></div>
-            </div>
-        </div>
-
-        <div class="line-horizontal w-full my-4"></div>
-        
-        <!-- You, Siblings & Cousins -->
-        <div class="flex justify-center items-start mb-8 flex-wrap">
-            <!-- Paternal Cousins -->
-            <div class="flex flex-col items-center">
-                <div class="line-vertical"></div>
-                <div class="flex flex-wrap justify-center mt-2">
-                    <div class="node node-paternal">
-                        <div class="node-title">Male cousin (older/younger)<i class="fas fa-volume-up play-icon" onclick="speak('Male cousin older younger', 'en-US')"></i></div>
-                        <div class="node-chinese">堂兄/弟<i class="fas fa-volume-up play-icon" onclick="speak('堂兄', 'zh-CN')"></i></div>
-                        <div class="node-pinyin">Táng xiōng/dì</div>
-                    </div>
-                    <div class="node node-paternal">
-                        <div class="node-title">Female cousin (older/younger)<i class="fas fa-volume-up play-icon" onclick="speak('Female cousin older younger', 'en-US')"></i></div>
-                        <div class="node-chinese">堂姐/妹<i class="fas fa-volume-up play-icon" onclick="speak('堂姐', 'zh-CN')"></i></div>
-                        <div class="node-pinyin">Táng jiě/mèi</div>
-                    </div>
-                </div>
-            </div>
-            <!-- Maternal Cousins -->
-            <div class="flex flex-col items-center">
-                <div class="line-vertical"></div>
-                <div class="flex flex-wrap justify-center mt-2">
-                    <div class="node node-maternal">
-                        <div class="node-title">Male cousin (older/younger)<i class="fas fa-volume-up play-icon" onclick="speak('Male cousin older younger', 'en-US')"></i></div>
-                        <div class="node-chinese">表兄/弟<i class="fas fa-volume-up play-icon" onclick="speak('表兄', 'zh-CN')"></i></div>
-                        <div class="node-pinyin">Biǎo xiōng/dì</div>
-                    </div>
-                    <div class="node node-maternal">
-                        <div class="node-title">Female cousin (older/younger)<i class="fas fa-volume-up play-icon" onclick="speak('Female cousin older younger', 'en-US')"></i></div>
-                        <div class="node-chinese">表姐/妹<i class="fas fa-volume-up play-icon" onclick="speak('表姐', 'zh-CN')"></i></div>
-                        <div class="node-pinyin">Biǎo jiě/mèi</div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- You & Siblings -->
-            <div class="flex flex-col items-center mx-16">
-                <div class="line-vertical"></div>
-                <div class="flex flex-wrap justify-center mt-2">
-                    <div class="node node-paternal">
-                        <div class="node-title">Older brother's wife<i class="fas fa-volume-up play-icon" onclick="speak('Older brother\'s wife', 'en-US')"></i></div>
-                        <div class="node-chinese">嫂子<i class="fas fa-volume-up play-icon" onclick="speak('嫂子', 'zh-CN')"></i></div>
-                        <div class="node-pinyin">Sǎozi</div>
-                    </div>
-                    <i class="fas fa-heart text-red-500 mx-2"></i>
-                    <div class="node node-paternal">
-                        <div class="node-title">Older brother<i class="fas fa-volume-up play-icon" onclick="speak('Older brother', 'en-US')"></i></div>
-                        <div class="node-chinese">哥哥<i class="fas fa-volume-up play-icon" onclick="speak('哥哥', 'zh-CN')"></i></div>
-                        <div class="node-pinyin">Gēge</div>
-                    </div>
-                    <div class="node node-you">
-                        <div class="node-title">You<i class="fas fa-volume-up play-icon" onclick="speak('You', 'en-US')"></i></div>
-                        <div class="node-chinese">我<i class="fas fa-volume-up play-icon" onclick="speak('我', 'zh-CN')"></i></div>
-                        <div class="node-pinyin">Wǒ</div>
-                    </div>
-                    <div class="node node-paternal">
-                        <div class="node-title">Younger brother<i class="fas fa-volume-up play-icon" onclick="speak('Younger brother', 'en-US')"></i></div>
-                        <div class="node-chinese">弟弟<i class="fas fa-volume-up play-icon" onclick="speak('弟弟', 'zh-CN')"></i></div>
-                        <div class="node-pinyin">Dìdi</div>
-                    </div>
-                    <i class="fas fa-heart text-red-500 mx-2"></i>
-                    <div class="node node-paternal">
-                        <div class="node-title">Younger brother's wife<i class="fas fa-volume-up play-icon" onclick="speak('Younger brother\'s wife', 'en-US')"></i></div>
-                        <div class="node-chinese">弟妹<i class="fas fa-volume-up play-icon" onclick="speak('弟妹', 'zh-CN')"></i></div>
-                        <div class="node-pinyin">Dìmèi</div>
-                    </div>
-                    <div class="node node-paternal">
-                        <div class="node-title">Older sister<i class="fas fa-volume-up play-icon" onclick="speak('Older sister', 'en-US')"></i></div>
-                        <div class="node-chinese">姐姐<i class="fas fa-volume-up play-icon" onclick="speak('姐姐', 'zh-CN')"></i></div>
-                        <div class="node-pinyin">Jiějie</div>
-                    </div>
-                    <i class="fas fa-heart text-red-500 mx-2"></i>
-                    <div class="node node-paternal">
-                        <div class="node-title">Older sister's husband<i class="fas fa-volume-up play-icon" onclick="speak('Older sister\'s husband', 'en-US')"></i></div>
-                        <div class="node-chinese">姐夫<i class="fas fa-volume-up play-icon" onclick="speak('姐夫', 'zh-CN')"></i></div>
-                        <div class="node-pinyin">Jiěfū</div>
-                    </div>
-                    <div class="node node-paternal">
-                        <div class="node-title">Younger sister<i class="fas fa-volume-up play-icon" onclick="speak('Younger sister', 'en-US')"></i></div>
-                        <div class="node-chinese">妹妹<i class="fas fa-volume-up play-icon" onclick="speak('妹妹', 'zh-CN')"></i></div>
-                        <div class="node-pinyin">Mèimei</div>
-                    </div>
-                    <i class="fas fa-heart text-red-500 mx-2"></i>
-                    <div class="node node-paternal">
-                        <div class="node-title">Younger sister's husband<i class="fas fa-volume-up play-icon" onclick="speak('Younger sister\'s husband', 'en-US')"></i></div>
-                        <div class="node-chinese">妹夫<i class="fas fa-volume-up play-icon" onclick="speak('妹夫', 'zh-CN')"></i></div>
-                        <div class="node-pinyin">Mèifū</div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="flex flex-col items-center">
-                <div class="line-vertical"></div>
-                <div class="flex flex-wrap justify-center mt-2">
-                    <div class="node node-maternal">
-                        <div class="node-title">Male cousin (older/younger)<i class="fas fa-volume-up play-icon" onclick="speak('Male cousin older younger', 'en-US')"></i></div>
-                        <div class="node-chinese">表哥/弟<i class="fas fa-volume-up play-icon" onclick="speak('表哥', 'zh-CN')"></i></div>
-                        <div class="node-pinyin">Biǎo gē/dì</div>
-                    </div>
-                    <div class="node node-maternal">
-                        <div class="node-title">Female cousin (older/younger)<i class="fas fa-volume-up play-icon" onclick="speak('Female cousin older younger', 'en-US')"></i></div>
-                        <div class="node-chinese">表姐/妹<i class="fas fa-volume-up play-icon" onclick="speak('表姐', 'zh-CN')"></i></div>
-                        <div class="node-pinyin">Biǎo jiě/mèi</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="line-horizontal w-full my-4"></div>
-        
-        <!-- Nieces & Nephews -->
-        <div class="flex justify-center items-start flex-wrap">
-            <div class="flex flex-col items-center mx-4">
-                <div class="line-vertical"></div>
-                <div class="flex flex-wrap justify-center mt-2">
-                    <div class="node node-paternal">
-                        <div class="node-title">Nephew (brother's son)<i class="fas fa-volume-up play-icon" onclick="speak('Nephew brother\'s son', 'en-US')"></i></div>
-                        <div class="node-chinese">侄子<i class="fas fa-volume-up play-icon" onclick="speak('侄子', 'zh-CN')"></i></div>
-                        <div class="node-pinyin">Zhízi</div>
-                    </div>
-                    <div class="node node-paternal">
-                        <div class="node-title">Niece (brother's daughter)<i class="fas fa-volume-up play-icon" onclick="speak('Niece brother\'s daughter', 'en-US')"></i></div>
-                        <div class="node-chinese">侄女<i class="fas fa-volume-up play-icon" onclick="speak('侄女', 'zh-CN')"></i></div>
-                        <div class="node-pinyin">Zhínǚ</div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="flex flex-col items-center mx-4">
-                <div class="line-vertical"></div>
-                <div class="flex flex-wrap justify-center mt-2">
-                    <div class="node node-maternal">
-                        <div class="node-title">Nephew (sister's son)<i class="fas fa-volume-up play-icon" onclick="speak('Nephew sister\'s son', 'en-US')"></i></div>
-                        <div class="node-chinese">外甥<i class="fas fa-volume-up play-icon" onclick="speak('外甥', 'zh-CN')"></i></div>
-                        <div class="node-pinyin">Wàisheng</div>
-                    </div>
-                    <div class="node node-maternal">
-                        <div class="node-title">Niece (sister's daughter)<i class="fas fa-volume-up play-icon" onclick="speak('Niece sister\'s daughter', 'en-US')"></i></div>
-                        <div class="node-chinese">外甥女<i class="fas fa-volume-up play-icon" onclick="speak('外甥女', 'zh-CN')"></i></div>
-                        <div class="node-pinyin">Wàishengnǚ</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <div class="container mx-auto max-w-7xl mt-12">
-        <h2 class="text-2xl md:text-3xl font-bold text-center mb-6 text-blue-400">
-            Glossary of Family Terms
-        </h2>
-        
-        <h3 class="text-xl font-semibold mt-8 mb-4">Immediate Family Members 直系亲属</h3>
-        <div class="glossary-table">
-            <div class="glossary-header glossary-row">
-                <div>English</div>
-                <div>Characters & Pinyin</div>
-                <div class="col-span-2">Explanation</div>
-            </div>
-            <div class="glossary-row">
-                <div>Mom<i class="fas fa-volume-up play-icon" onclick="speak('Mom', 'en-US')"></i></div>
-                <div class="glossary-char">
-                    <div>妈妈<i class="fas fa-volume-up play-icon" onclick="speak('妈妈', 'zh-CN')"></i></div>
-                    <div class="glossary-pinyin">māma</div>
-                </div>
-                <div class="col-span-2">
-                    <div>Your mother<i class="fas fa-volume-up play-icon" onclick="speak('Your mother', 'en-US')"></i></div>
-                    <div class="glossary-explanation-chinese">你母亲<i class="fas fa-volume-up play-icon" onclick="speak('你的母亲', 'zh-CN')"></i></div>
-                </div>
-            </div>
-            <div class="glossary-row">
-                <div>Dad<i class="fas fa-volume-up play-icon" onclick="speak('Dad', 'en-US')"></i></div>
-                <div class="glossary-char">
-                    <div>爸爸<i class="fas fa-volume-up play-icon" onclick="speak('爸爸', 'zh-CN')"></i></div>
-                    <div class="glossary-pinyin">bàba</div>
-                </div>
-                <div class="col-span-2">
-                    <div>Your father<i class="fas fa-volume-up play-icon" onclick="speak('Your father', 'en-US')"></i></div>
-                    <div class="glossary-explanation-chinese">你父亲<i class="fas fa-volume-up play-icon" onclick="speak('你的父亲', 'zh-CN')"></i></div>
-                </div>
-            </div>
-            <div class="glossary-row">
-                <div>Older brother<i class="fas fa-volume-up play-icon" onclick="speak('Older brother', 'en-US')"></i></div>
-                <div class="glossary-char">
-                    <div>哥哥<i class="fas fa-volume-up play-icon" onclick="speak('哥哥', 'zh-CN')"></i></div>
-                    <div class="glossary-pinyin">gēge</div>
-                </div>
-                <div class="col-span-2">
-                    <div>Your older brother<i class="fas fa-volume-up play-icon" onclick="speak('Your older brother', 'en-US')"></i></div>
-                    <div class="glossary-explanation-chinese">你的哥哥<i class="fas fa-volume-up play-icon" onclick="speak('你的哥哥', 'zh-CN')"></i></div>
-                </div>
-            </div>
-            <div class="glossary-row">
-                <div>Older sister<i class="fas fa-volume-up play-icon" onclick="speak('Older sister', 'en-US')"></i></div>
-                <div class="glossary-char">
-                    <div>姐姐<i class="fas fa-volume-up play-icon" onclick="speak('姐姐', 'zh-CN')"></i></div>
-                    <div class="glossary-pinyin">jiějie</div>
-                </div>
-                <div class="col-span-2">
-                    <div>Your older sister<i class="fas fa-volume-up play-icon" onclick="speak('Your older sister', 'en-US')"></i></div>
-                    <div class="glossary-explanation-chinese">你的姐姐<i class="fas fa-volume-up play-icon" onclick="speak('你的姐姐', 'zh-CN')"></i></div>
-                </div>
-            </div>
-            <div class="glossary-row">
-                <div>Younger brother<i class="fas fa-volume-up play-icon" onclick="speak('Younger brother', 'en-US')"></i></div>
-                <div class="glossary-char">
-                    <div>弟弟<i class="fas fa-volume-up play-icon" onclick="speak('弟弟', 'zh-CN')"></i></div>
-                    <div class="glossary-pinyin">dìdi</div>
-                </div>
-                <div class="col-span-2">
-                    <div>Your younger brother<i class="fas fa-volume-up play-icon" onclick="speak('Your younger brother', 'en-US')"></i></div>
-                    <div class="glossary-explanation-chinese">你的弟弟<i class="fas fa-volume-up play-icon" onclick="speak('你的弟弟', 'zh-CN')"></i></div>
-                </div>
-            </div>
-            <div class="glossary-row">
-                <div>Younger sister<i class="fas fa-volume-up play-icon" onclick="speak('Younger sister', 'en-US')"></i></div>
-                <div class="glossary-char">
-                    <div>妹妹<i class="fas fa-volume-up play-icon" onclick="speak('妹妹', 'zh-CN')"></i></div>
-                    <div class="glossary-pinyin">mèimei</div>
-                </div>
-                <div class="col-span-2">
-                    <div>Your younger sister<i class="fas fa-volume-up play-icon" onclick="speak('Your younger sister', 'en-US')"></i></div>
-                    <div class="glossary-explanation-chinese">你的妹妹<i class="fas fa-volume-up play-icon" onclick="speak('你的妹妹', 'zh-CN')"></i></div>
-                </div>
-            </div>
-        </div>
-
-        <h3 class="text-xl font-semibold mt-8 mb-4">Grandparents 祖父母 / 外祖父母</h3>
-        <div class="glossary-table">
-            <div class="glossary-header glossary-row">
-                <div>English</div>
-                <div>Characters & Pinyin</div>
-                <div class="col-span-2">Explanation</div>
-            </div>
-            <div class="glossary-row">
-                <div>Grandmother<i class="fas fa-volume-up play-icon" onclick="speak('Grandmother', 'en-US')"></i></div>
-                <div class="glossary-char">
-                    <div>奶奶<i class="fas fa-volume-up play-icon" onclick="speak('奶奶', 'zh-CN')"></i></div>
-                    <div class="glossary-pinyin">nǎinai</div>
-                </div>
-                <div class="col-span-2">
-                    <div>Your father's mother<i class="fas fa-volume-up play-icon" onclick="speak('Your father\'s mother', 'en-US')"></i></div>
-                    <div class="glossary-explanation-chinese">你父亲的母亲<i class="fas fa-volume-up play-icon" onclick="speak('你父亲的母亲', 'zh-CN')"></i></div>
-                </div>
-            </div>
-            <div class="glossary-row">
-                <div>Grandfather<i class="fas fa-volume-up play-icon" onclick="speak('Grandfather', 'en-US')"></i></div>
-                <div class="glossary-char">
-                    <div>爷爷<i class="fas fa-volume-up play-icon" onclick="speak('爷爷', 'zh-CN')"></i></div>
-                    <div class="glossary-pinyin">yéye</div>
-                </div>
-                <div class="col-span-2">
-                    <div>Your father's father<i class="fas fa-volume-up play-icon" onclick="speak('Your father\'s father', 'en-US')"></i></div>
-                    <div class="glossary-explanation-chinese">你父亲的父亲<i class="fas fa-volume-up play-icon" onclick="speak('你父亲的父亲', 'zh-CN')"></i></div>
-                </div>
-            </div>
-            <div class="glossary-row">
-                <div>Grandmother<i class="fas fa-volume-up play-icon" onclick="speak('Grandmother', 'en-US')"></i></div>
-                <div class="glossary-char">
-                    <div>外婆<i class="fas fa-volume-up play-icon" onclick="speak('外婆', 'zh-CN')"></i></div>
-                    <div class="glossary-pinyin">wàipó</div>
-                </div>
-                <div class="col-span-2">
-                    <div>Your mother's mother<i class="fas fa-volume-up play-icon" onclick="speak('Your mother\'s mother', 'en-US')"></i></div>
-                    <div class="glossary-explanation-chinese">你母亲的母亲<i class="fas fa-volume-up play-icon" onclick="speak('你母亲的母亲', 'zh-CN')"></i></div>
-                </div>
-            </div>
-            <div class="glossary-row">
-                <div>Grandfather<i class="fas fa-volume-up play-icon" onclick="speak('Grandfather', 'en-US')"></i></div>
-                <div class="glossary-char">
-                    <div>外公<i class="fas fa-volume-up play-icon" onclick="speak('外公', 'zh-CN')"></i></div>
-                    <div class="glossary-pinyin">wàigōng</div>
-                </div>
-                <div class="col-span-2">
-                    <div>Your mother's father<i class="fas fa-volume-up play-icon" onclick="speak('Your mother\'s father', 'en-US')"></i></div>
-                    <div class="glossary-explanation-chinese">你母亲的父亲<i class="fas fa-volume-up play-icon" onclick="speak('你母亲的父亲', 'zh-CN')"></i></div>
-                </div>
-            </div>
-        </div>
-
-        <h3 class="text-xl font-semibold mt-8 mb-4">Aunts & Uncles (Paternal Side) 父系的叔伯姑姑</h3>
-        <div class="glossary-table">
-            <div class="glossary-header glossary-row">
-                <div>English</div>
-                <div>Characters & Pinyin</div>
-                <div class="col-span-2">Explanation</div>
-            </div>
-            <div class="glossary-row">
-                <div>Uncle<i class="fas fa-volume-up play-icon" onclick="speak('Uncle', 'en-US')"></i></div>
-                <div class="glossary-char">
-                    <div>伯伯<i class="fas fa-volume-up play-icon" onclick="speak('伯伯', 'zh-CN')"></i></div>
-                    <div class="glossary-pinyin">bóbo</div>
-                </div>
-                <div class="col-span-2">
-                    <div>Your father's older brother<i class="fas fa-volume-up play-icon" onclick="speak('Your father\'s older brother', 'en-US')"></i></div>
-                    <div class="glossary-explanation-chinese">你父亲的哥哥<i class="fas fa-volume-up play-icon" onclick="speak('你父亲的哥哥', 'zh-CN')"></i></div>
-                </div>
-            </div>
-            <div class="glossary-row">
-                <div>Aunt<i class="fas fa-volume-up play-icon" onclick="speak('Aunt', 'en-US')"></i></div>
-                <div class="glossary-char">
-                    <div>伯母<i class="fas fa-volume-up play-icon" onclick="speak('伯母', 'zh-CN')"></i></div>
-                    <div class="glossary-pinyin">bómǔ</div>
-                </div>
-                <div class="col-span-2">
-                    <div>Your father's older brother's wife<i class="fas fa-volume-up play-icon" onclick="speak('Your father\'s older brother\'s wife', 'en-US')"></i></div>
-                    <div class="glossary-explanation-chinese">你父亲的哥哥的妻子<i class="fas fa-volume-up play-icon" onclick="speak('你父亲的哥哥的妻子', 'zh-CN')"></i></div>
-                </div>
-            </div>
-            <div class="glossary-row">
-                <div>Uncle<i class="fas fa-volume-up play-icon" onclick="speak('Uncle', 'en-US')"></i></div>
-                <div class="glossary-char">
-                    <div>叔叔<i class="fas fa-volume-up play-icon" onclick="speak('叔叔', 'zh-CN')"></i></div>
-                    <div class="glossary-pinyin">shūshu</div>
-                </div>
-                <div class="col-span-2">
-                    <div>Your father's younger brother<i class="fas fa-volume-up play-icon" onclick="speak('Your father\'s younger brother', 'en-US')"></i></div>
-                    <div class="glossary-explanation-chinese">你父亲的弟弟<i class="fas fa-volume-up play-icon" onclick="speak('你父亲的弟弟', 'zh-CN')"></i></div>
-                </div>
-            </div>
-            <div class="glossary-row">
-                <div>Aunt<i class="fas fa-volume-up play-icon" onclick="speak('Aunt', 'en-US')"></i></div>
-                <div class="glossary-char">
-                    <div>婶婶<i class="fas fa-volume-up play-icon" onclick="speak('婶婶', 'zh-CN')"></i></div>
-                    <div class="glossary-pinyin">shěnshen</div>
-                </div>
-                <div class="col-span-2">
-                    <div>Your father's younger brother's wife<i class="fas fa-volume-up play-icon" onclick="speak('Your father\'s younger brother\'s wife', 'en-US')"></i></div>
-                    <div class="glossary-explanation-chinese">你父亲的弟弟的妻子<i class="fas fa-volume-up play-icon" onclick="speak('你父亲的弟弟的妻子', 'zh-CN')"></i></div>
-                </div>
-            </div>
-            <div class="glossary-row">
-                <div>Aunt<i class="fas fa-volume-up play-icon" onclick="speak('Aunt', 'en-US')"></i></div>
-                <div class="glossary-char">
-                    <div>姑妈<i class="fas fa-volume-up play-icon" onclick="speak('姑妈', 'zh-CN')"></i></div>
-                    <div class="glossary-pinyin">gūmā</div>
-                </div>
-                <div class="col-span-2">
-                    <div>Your father's older sister<i class="fas fa-volume-up play-icon" onclick="speak('Your father\'s older sister', 'en-US')"></i></div>
-                    <div class="glossary-explanation-chinese">你父亲的姐姐<i class="fas fa-volume-up play-icon" onclick="speak('你父亲的姐姐', 'zh-CN')"></i></div>
-                </div>
-            </div>
-            <div class="glossary-row">
-                <div>Aunt<i class="fas fa-volume-up play-icon" onclick="speak('Aunt', 'en-US')"></i></div>
-                <div class="glossary-char">
-                    <div>姑姑<i class="fas fa-volume-up play-icon" onclick="speak('姑姑', 'zh-CN')"></i></div>
-                    <div class="glossary-pinyin">gūgu</div>
-                </div>
-                <div class="col-span-2">
-                    <div>Your father's younger sister<i class="fas fa-volume-up play-icon" onclick="speak('Your father\'s younger sister', 'en-US')"></i></div>
-                    <div class="glossary-explanation-chinese">你父亲的妹妹<i class="fas fa-volume-up play-icon" onclick="speak('你父亲的妹妹', 'zh-CN')"></i></div>
-                </div>
-            </div>
-            <div class="glossary-row">
-                <div>Uncle<i class="fas fa-volume-up play-icon" onclick="speak('Uncle', 'en-US')"></i></div>
-                <div class="glossary-char">
-                    <div>姑父<i class="fas fa-volume-up play-icon" onclick="speak('姑父', 'zh-CN')"></i></div>
-                    <div class="glossary-pinyin">gūfù</div>
-                </div>
-                <div class="col-span-2">
-                    <div>Your father's sister's husband<i class="fas fa-volume-up play-icon" onclick="speak('Your father\'s sister\'s husband', 'en-US')"></i></div>
-                    <div class="glossary-explanation-chinese">你父亲的姐妹的丈夫<i class="fas fa-volume-up play-icon" onclick="speak('你父亲的姐妹的丈夫', 'zh-CN')"></i></div>
-                </div>
-            </div>
-        </div>
-
-        <h3 class="text-xl font-semibold mt-8 mb-4">Aunts & Uncles (Maternal Side) 母系的舅舅姨妈</h3>
-        <div class="glossary-table">
-            <div class="glossary-header glossary-row">
-                <div>English</div>
-                <div>Characters & Pinyin</div>
-                <div class="col-span-2">Explanation</div>
-            </div>
-            <div class="glossary-row">
-                <div>Uncle<i class="fas fa-volume-up play-icon" onclick="speak('Uncle', 'en-US')"></i></div>
-                <div class="glossary-char">
-                    <div>舅舅<i class="fas fa-volume-up play-icon" onclick="speak('舅舅', 'zh-CN')"></i></div>
-                    <div class="glossary-pinyin">jiùjiu</div>
-                </div>
-                <div class="col-span-2">
-                    <div>Your mother's brother<i class="fas fa-volume-up play-icon" onclick="speak('Your mother\'s brother', 'en-US')"></i></div>
-                    <div class="glossary-explanation-chinese">你母亲的兄弟<i class="fas fa-volume-up play-icon" onclick="speak('你母亲的兄弟', 'zh-CN')"></i></div>
-                </div>
-            </div>
-            <div class="glossary-row">
-                <div>Aunt<i class="fas fa-volume-up play-icon" onclick="speak('Aunt', 'en-US')"></i></div>
-                <div class="glossary-char">
-                    <div>舅母<i class="fas fa-volume-up play-icon" onclick="speak('舅母', 'zh-CN')"></i></div>
-                    <div class="glossary-pinyin">jiùmǔ</div>
-                </div>
-                <div class="col-span-2">
-                    <div>Your mother's brother's wife<i class="fas fa-volume-up play-icon" onclick="speak('Your mother\'s brother\'s wife', 'en-US')"></i></div>
-                    <div class="glossary-explanation-chinese">你母亲的兄弟的妻子<i class="fas fa-volume-up play-icon" onclick="speak('你母亲的兄弟的妻子', 'zh-CN')"></i></div>
-                </div>
-            </div>
-            <div class="glossary-row">
-                <div>Aunt<i class="fas fa-volume-up play-icon" onclick="speak('Aunt', 'en-US')"></i></div>
-                <div class="glossary-char">
-                    <div>姨妈<i class="fas fa-volume-up play-icon" onclick="speak('姨妈', 'zh-CN')"></i></div>
-                    <div class="glossary-pinyin">yímā</div>
-                </div>
-                <div class="col-span-2">
-                    <div>Your mother's older sister<i class="fas fa-volume-up play-icon" onclick="speak('Your mother\'s older sister', 'en-US')"></i></div>
-                    <div class="glossary-explanation-chinese">你母亲的姐姐<i class="fas fa-volume-up play-icon" onclick="speak('你母亲的姐姐', 'zh-CN')"></i></div>
-                </div>
-            </div>
-            <div class="glossary-row">
-                <div>Aunt<i class="fas fa-volume-up play-icon" onclick="speak('Aunt', 'en-US')"></i></div>
-                <div class="glossary-char">
-                    <div>阿姨<i class="fas fa-volume-up play-icon" onclick="speak('阿姨', 'zh-CN')"></i></div>
-                    <div class="glossary-pinyin">āyí</div>
-                </div>
-                <div class="col-span-2">
-                    <div>Your mother's younger sister<i class="fas fa-volume-up play-icon" onclick="speak('Your mother\'s younger sister', 'en-US')"></i></div>
-                    <div class="glossary-explanation-chinese">你母亲的妹妹<i class="fas fa-volume-up play-icon" onclick="speak('你母亲的妹妹', 'zh-CN')"></i></div>
-                </div>
-            </div>
-            <div class="glossary-row">
-                <div>Uncle<i class="fas fa-volume-up play-icon" onclick="speak('Uncle', 'en-US')"></i></div>
-                <div class="glossary-char">
-                    <div>姨父<i class="fas fa-volume-up play-icon" onclick="speak('姨父', 'zh-CN')"></i></div>
-                    <div class="glossary-pinyin">yífù</div>
-                </div>
-                <div class="col-span-2">
-                    <div>Your mother's sister's husband<i class="fas fa-volume-up play-icon" onclick="speak('Your mother\'s sister\'s husband', 'en-US')"></i></div>
-                    <div class="glossary-explanation-chinese">你母亲的姐妹的丈夫<i class="fas fa-volume-up play-icon" onclick="speak('你母亲的姐妹的丈夫', 'zh-CN')"></i></div>
-                </div>
-            </div>
-        </div>
-
-        <h3 class="text-xl font-semibold mt-8 mb-4">Cousins 堂表兄弟姐妹</h3>
-        <div class="glossary-table">
-            <div class="glossary-header glossary-row">
-                <div>English</div>
-                <div>Characters & Pinyin</div>
-                <div class="col-span-2">Explanation</div>
-            </div>
-            <div class="glossary-row">
-                <div>Paternal Male Cousin<i class="fas fa-volume-up play-icon" onclick="speak('Paternal Male Cousin', 'en-US')"></i></div>
-                <div class="glossary-char">
-                    <div>堂兄<i class="fas fa-volume-up play-icon" onclick="speak('堂兄', 'zh-CN')"></i></div>
-                    <div class="glossary-pinyin">táng xiōng</div>
-                </div>
-                <div class="col-span-2">
-                    <div>Your father's brother's son (older)<i class="fas fa-volume-up play-icon" onclick="speak('Your father\'s brother\'s son older', 'en-US')"></i></div>
-                    <div class="glossary-explanation-chinese">你父亲的兄弟的儿子（比你大）<i class="fas fa-volume-up play-icon" onclick="speak('你父亲的兄弟的儿子，比你大', 'zh-CN')"></i></div>
-                </div>
-            </div>
-            <div class="glossary-row">
-                <div>Paternal Male Cousin<i class="fas fa-volume-up play-icon" onclick="speak('Paternal Male Cousin', 'en-US')"></i></div>
-                <div class="glossary-char">
-                    <div>堂弟<i class="fas fa-volume-up play-icon" onclick="speak('堂弟', 'zh-CN')"></i></div>
-                    <div class="glossary-pinyin">táng dì</div>
-                </div>
-                <div class="col-span-2">
-                    <div>Your father's brother's son (younger)<i class="fas fa-volume-up play-icon" onclick="speak('Your father\'s brother\'s son younger', 'en-US')"></i></div>
-                    <div class="glossary-explanation-chinese">你父亲的兄弟的儿子（比你小）<i class="fas fa-volume-up play-icon" onclick="speak('你父亲的兄弟的儿子，比你小', 'zh-CN')"></i></div>
-                </div>
-            </div>
-            <div class="glossary-row">
-                <div>Paternal Female Cousin<i class="fas fa-volume-up play-icon" onclick="speak('Paternal Female Cousin', 'en-US')"></i></div>
-                <div class="glossary-char">
-                    <div>堂姐<i class="fas fa-volume-up play-icon" onclick="speak('堂姐', 'zh-CN')"></i></div>
-                    <div class="glossary-pinyin">táng jiě</div>
-                </div>
-                <div class="col-span-2">
-                    <div>Your father's brother's daughter (older)<i class="fas fa-volume-up play-icon" onclick="speak('Your father\'s brother\'s daughter older', 'en-US')"></i></div>
-                    <div class="glossary-explanation-chinese">你父亲的兄弟的女儿（比你大）<i class="fas fa-volume-up play-icon" onclick="speak('你父亲的兄弟的女儿，比你大', 'zh-CN')"></i></div>
-                </div>
-            </div>
-            <div class="glossary-row">
-                <div>Paternal Female Cousin<i class="fas fa-volume-up play-icon" onclick="speak('Paternal Female Cousin', 'en-US')"></i></div>
-                <div class="glossary-char">
-                    <div>堂妹<i class="fas fa-volume-up play-icon" onclick="speak('堂妹', 'zh-CN')"></i></div>
-                    <div class="glossary-pinyin">táng mèi</div>
-                </div>
-                <div class="col-span-2">
-                    <div>Your father's brother's daughter (younger)<i class="fas fa-volume-up play-icon" onclick="speak('Your father\'s brother\'s daughter younger', 'en-US')"></i></div>
-                    <div class="glossary-explanation-chinese">你父亲的兄弟的女儿（比你小）<i class="fas fa-volume-up play-icon" onclick="speak('你父亲的兄弟的女儿，比你小', 'zh-CN')"></i></div>
-                </div>
-            </div>
-            <div class="glossary-row">
-                <div>Maternal Male Cousin<i class="fas fa-volume-up play-icon" onclick="speak('Maternal Male Cousin', 'en-US')"></i></div>
-                <div class="glossary-char">
-                    <div>表哥<i class="fas fa-volume-up play-icon" onclick="speak('表哥', 'zh-CN')"></i></div>
-                    <div class="glossary-pinyin">biǎo gē</div>
-                </div>
-                <div class="col-span-2">
-                    <div>Your mother's brother's/sister's son (older)<i class="fas fa-volume-up play-icon" onclick="speak('Your mother\'s brother\'s or sister\'s son older', 'en-US')"></i></div>
-                    <div class="glossary-explanation-chinese">你母亲的兄弟/姐妹的儿子（比你大）<i class="fas fa-volume-up play-icon" onclick="speak('你母亲的兄弟姐妹的儿子，比你大', 'zh-CN')"></i></div>
-                </div>
-            </div>
-            <div class="glossary-row">
-                <div>Maternal Male Cousin<i class="fas fa-volume-up play-icon" onclick="speak('Maternal Male Cousin', 'en-US')"></i></div>
-                <div class="glossary-char">
-                    <div>表弟<i class="fas fa-volume-up play-icon" onclick="speak('表弟', 'zh-CN')"></i></div>
-                    <div class="glossary-pinyin">biǎo dì</div>
-                </div>
-                <div class="col-span-2">
-                    <div>Your mother's brother's/sister's son (younger)<i class="fas fa-volume-up play-icon" onclick="speak('Your mother\'s brother\'s or sister\'s son younger', 'en-US')"></i></div>
-                    <div class="glossary-explanation-chinese">你母亲的兄弟/姐妹的儿子（比你小）<i class="fas fa-volume-up play-icon" onclick="speak('你母亲的兄弟姐妹的儿子，比你小', 'zh-CN')"></i></div>
-                </div>
-            </div>
-            <div class="glossary-row">
-                <div>Maternal Female Cousin<i class="fas fa-volume-up play-icon" onclick="speak('Maternal Female Cousin', 'en-US')"></i></div>
-                <div class="glossary-char">
-                    <div>表姐<i class="fas fa-volume-up play-icon" onclick="speak('表姐', 'zh-CN')"></i></div>
-                    <div class="glossary-pinyin">biǎo jiě</div>
-                </div>
-                <div class="col-span-2">
-                    <div>Your mother's brother's/sister's daughter (older)<i class="fas fa-volume-up play-icon" onclick="speak('Your mother\'s brother\'s or sister\'s daughter older', 'en-US')"></i></div>
-                    <div class="glossary-explanation-chinese">你母亲的兄弟/姐妹的女儿（比你大）<i class="fas fa-volume-up play-icon" onclick="speak('你母亲的兄弟姐妹的女儿，比你大', 'zh-CN')"></i></div>
-                </div>
-            </div>
-            <div class="glossary-row">
-                <div>Maternal Female Cousin<i class="fas fa-volume-up play-icon" onclick="speak('Maternal Female Cousin', 'en-US')"></i></div>
-                <div class="glossary-char">
-                    <div>表妹<i class="fas fa-volume-up play-icon" onclick="speak('表妹', 'zh-CN')"></i></div>
-                    <div class="glossary-pinyin">biǎo mèi</div>
-                </div>
-                <div class="col-span-2">
-                    <div>Your mother's brother's/sister's daughter (younger)<i class="fas fa-volume-up play-icon" onclick="speak('Your mother\'s brother\'s or sister\'s daughter younger', 'en-US')"></i></div>
-                    <div class="glossary-explanation-chinese">你母亲的兄弟/姐妹的女儿（比你小）<i class="fas fa-volume-up play-icon" onclick="speak('你母亲的兄弟姐妹的女儿，比你小', 'zh-CN')"></i></div>
-                </div>
-            </div>
-        </div>
-
-        <h3 class="text-xl font-semibold mt-8 mb-4">Nieces & Nephews 侄子外甥</h3>
-        <div class="glossary-table">
-            <div class="glossary-header glossary-row">
-                <div>English</div>
-                <div>Characters & Pinyin</div>
-                <div class="col-span-2">Explanation</div>
-            </div>
-            <div class="glossary-row">
-                <div>Nephew<i class="fas fa-volume-up play-icon" onclick="speak('Nephew', 'en-US')"></i></div>
-                <div class="glossary-char">
-                    <div>侄子<i class="fas fa-volume-up play-icon" onclick="speak('侄子', 'zh-CN')"></i></div>
-                    <div class="glossary-pinyin">zhízi</div>
-                </div>
-                <div class="col-span-2">
-                    <div>Your brother's son<i class="fas fa-volume-up play-icon" onclick="speak('Your brother\'s son', 'en-US')"></i></div>
-                    <div class="glossary-explanation-chinese">你兄弟的儿子<i class="fas fa-volume-up play-icon" onclick="speak('你兄弟的儿子', 'zh-CN')"></i></div>
-                </div>
-            </div>
-            <div class="glossary-row">
-                <div>Niece<i class="fas fa-volume-up play-icon" onclick="speak('Niece', 'en-US')"></i></div>
-                <div class="glossary-char">
-                    <div>侄女<i class="fas fa-volume-up play-icon" onclick="speak('侄女', 'zh-CN')"></i></div>
-                    <div class="glossary-pinyin">zhínǚ</div>
-                </div>
-                <div class="col-span-2">
-                    <div>Your brother's daughter<i class="fas fa-volume-up play-icon" onclick="speak('Your brother\'s daughter', 'en-US')"></i></div>
-                    <div class="glossary-explanation-chinese">你兄弟的女儿<i class="fas fa-volume-up play-icon" onclick="speak('你兄弟的女儿', 'zh-CN')"></i></div>
-                </div>
-            </div>
-            <div class="glossary-row">
-                <div>Nephew<i class="fas fa-volume-up play-icon" onclick="speak('Nephew', 'en-US')"></i></div>
-                <div class="glossary-char">
-                    <div>外甥<i class="fas fa-volume-up play-icon" onclick="speak('外甥', 'zh-CN')"></i></div>
-                    <div class="glossary-pinyin">wàisheng</div>
-                </div>
-                <div class="col-span-2">
-                    <div>Your sister's son<i class="fas fa-volume-up play-icon" onclick="speak('Your sister\'s son', 'en-US')"></i></div>
-                    <div class="glossary-explanation-chinese">你姐妹的儿子<i class="fas fa-volume-up play-icon" onclick="speak('你姐妹的儿子', 'zh-CN')"></i></div>
-                </div>
-            </div>
-            <div class="glossary-row">
-                <div>Niece<i class="fas fa-volume-up play-icon" onclick="speak('Niece', 'en-US')"></i></div>
-                <div class="glossary-char">
-                    <div>外甥女<i class="fas fa-volume-up play-icon" onclick="speak('外甥女', 'zh-CN')"></i></div>
-                    <div class="glossary-pinyin">wàishengnǚ</div>
-                </div>
-                <div class="col-span-2">
-                    <div>Your sister's daughter<i class="fas fa-volume-up play-icon" onclick="speak('Your sister\'s daughter', 'en-US')"></i></div>
-                    <div class="glossary-explanation-chinese">你姐妹的女儿<i class="fas fa-volume-up play-icon" onclick="speak('你姐妹的女儿', 'zh-CN')"></i></div>
-                </div>
-            </div>
-        </div>
-
-    </div>
-    
-    <div class="container mx-auto max-w-7xl mt-12 text-center text-gray-400">
-        <p class="mb-2">These are the used resources/应用：</p>
-        <ul class="list-none p-0">
-            <li><a href="https://www.edrawmax.com/article/chinese-family-tree.html" class="text-blue-400 hover:underline" target="_blank">https://www.edrawmax.com/article/chinese-family-tree.html</a></li>
-            <li><a href="https://ltl-school.com/complicated-chinese-family-tree/" class="text-blue-400 hover:underline" target="_blank">https://ltl-school.com/complicated-chinese-family-tree/</a></li>
-        </ul>
     </div>
 
     <script>
-        // The speech synthesis API can sometimes be a bit slow to load,
-        // so we'll wait for the voices to be available.
-        window.speechSynthesis.onvoiceschanged = () => {
-            console.log("Speech voices loaded.");
+        // 词汇表数据，已将你的.docx文件内容整理并分类为JavaScript数组
+        const glossaryData = {
+            '祖父母辈 (Grandparents Generation)': [
+                {中文: '曾祖父', pinyin: 'zēng zǔ fù', 英文: 'great-grandfather', 描述: {zh: '父亲的祖父', en: 'Father’s grandfather'}},
+                {中文: '曾祖母', pinyin: 'zēng zǔ mǔ', 英文: 'great-grandmother', 描述: {zh: '父亲的祖母', en: 'Father’s grandmother'}},
+                {中文: '伯公', pinyin: 'bó gōng', 英文: 'granduncle', 描述: {zh: '父亲的伯父（年长的兄弟）', en: 'Father’s elder uncle'}},
+                {中文: '伯婆', pinyin: 'bó pó', 英文: 'grandaunt', 描述: {zh: '伯公的妻子', en: 'Wife of father’s elder uncle'}},
+                {中文: '叔公', pinyin: 'shū gōng', 英文: 'granduncle', 描述: {zh: '父亲的叔叔（年幼的兄弟）。在粤语、闽南语等方言中，读作jǔ公。', en: 'Father’s younger uncle. In dialects such as Cantonese and Hokkien, it is pronounced jǔ gōng.'}},
+                {中文: '叔婆', pinyin: 'shū pó', 英文: 'grandaunt', 描述: {zh: '叔公的妻子', en: 'Wife of father’s younger uncle'}},
+                {中文: '姑婆', pinyin: 'gū pó', 英文: 'grandaunt', 描述: {zh: '父亲的姑母', en: 'Father’s aunt'}},
+                {中文: '姑丈公', pinyin: 'gū zhàng gōng', 英文: 'granduncle (by marriage)', 描述: {zh: '姑妈/姑姑的丈夫', en: 'Husband of father’s aunt'}},
+                {中文: '爷爷', pinyin: 'yé yé', 英文: 'grandfather', 描述: {zh: '父亲的父亲', en: 'Father’s father'}},
+                {中文: '奶奶', pinyin: 'nǎi nai', 英文: 'grandmother', 描述: {zh: '父亲的母亲', en: 'Mother’s mother'}},
+                {中文: '外曾祖父', pinyin: 'wài zēng zǔ fù', 英文: 'great-grandfather', 描述: {zh: '母亲的祖父', en: 'Mother’s grandfather'}},
+                {中文: '外曾祖母', pinyin: 'wài zēng zǔ mǔ', 英文: 'great-grandmother', 描述: {zh: '母亲的祖母', en: 'Mother’s grandmother'}},
+                {中文: '舅公', pinyin: 'jiù gōng', 英文: 'granduncle', 描述: {zh: '母亲的舅舅', en: 'Mother’s uncle'}},
+                {中文: '舅婆', pinyin: 'jiù pó', 英文: 'grandaunt', 描述: {zh: '舅公的妻子', en: 'Wife of mother’s uncle'}},
+                {中文: '姨婆', pinyin: 'yí pó', 英文: 'grandaunt', 描述: {zh: '母亲的姨妈', en: 'Mother’s aunt'}},
+                {中文: '姨丈公', pinyin: 'yí zhàng gōng', 英文: 'granduncle (by marriage)', 描述: {zh: '姨婆的丈夫', en: 'Husband of mother’s aunt'}},
+                {中文: '外祖父', pinyin: 'wài zǔ fù', 英文: 'maternal grandfather', 描述: {zh: '母亲的父亲', en: 'Mother’s father'}},
+                {中文: '外祖母', pinyin: 'wài zǔ mǔ', 英文: 'maternal grandmother', 描述: {zh: '母亲的母亲', en: 'Mother’s mother'}},
+            ],
+            '父母及兄弟姐妹辈 (Parents & Siblings Generation)': [
+                {中文: '父亲', pinyin: 'fù qīn', 英文: 'father', 描述: {zh: '你爸爸', en: 'Your father'}},
+                {中文: '母亲', pinyin: 'mǔ qīn', 英文: 'mother', 描述: {zh: '你妈妈', en: 'Your mother'}},
+                {中文: '你', pinyin: 'nǐ', 英文: 'you / self', 描述: {zh: '本人', en: 'Yourself'}},
+                // 兄弟姐妹
+                {中文: '哥哥', pinyin: 'gē ge', 英文: 'older brother', 描述: {zh: '你哥哥', en: 'Your older brother'}},
+                {中文: '嫂子', pinyin: 'sǎo zi', 英文: 'older brother\'s wife', 描述: {zh: '你哥哥的妻子', en: 'Your older brother\'s wife'}},
+                {中文: '弟弟', pinyin: 'dì di', 英文: 'younger brother', 描述: {zh: '你弟弟', en: 'Your younger brother'}},
+                {中文: '弟妹', pinyin: 'dì mèi', 英文: 'younger brother\'s wife', 描述: {zh: '你弟弟的妻子', en: 'Your younger brother\'s wife'}},
+                {中文: '姐姐', pinyin: 'jiě jie', 英文: 'older sister', 描述: {zh: '你姐姐', en: 'Your older sister'}},
+                {中文: '姐夫', pinyin: 'jiě fū', 英文: 'older sister\'s husband', 描述: {zh: '你姐姐的丈夫', en: 'Your older sister\'s husband'}},
+                {中文: '妹妹', pinyin: 'mèi mei', 英文: 'younger sister', 描述: {zh: '你妹妹', en: 'Your younger sister'}},
+                {中文: '妹夫', pinyin: 'mèi fū', 英文: 'younger sister\'s husband', 描述: {zh: '你妹妹的丈夫', en: 'Your younger sister\'s husband'}},
+                // 父亲的兄弟姐妹
+                {中文: '伯伯', pinyin: 'bó bo', 英文: 'paternal uncle (older)', 描述: {zh: '父亲的哥哥', en: 'Father\'s older brother'}},
+                {中文: '伯母', pinyin: 'bó mǔ', 英文: 'wife of paternal uncle (older)', 描述: {zh: '伯伯的妻子', en: 'Wife of father\'s older brother'}},
+                {中文: '叔叔 / 叔父', pinyin: 'shū shu / shū fù', 英文: 'paternal uncle (younger)', 描述: {zh: '父亲的弟弟', en: 'Father\'s younger brother'}},
+                {中文: '婶婶', pinyin: 'shěn shen', 英文: 'wife of paternal uncle (younger)', 描述: {zh: '叔叔/叔父的妻子', en: 'Wife of father\'s younger brother'}},
+                {中文: '姑姑 / 姑妈', pinyin: 'gū gu / gū mā', 英文: 'paternal aunt', 描述: {zh: '父亲的姐妹', en: 'Father\'s sister'}},
+                {中文: '姑丈 / 姑父', pinyin: 'gū zhàng / gū fù', 英文: 'paternal aunt\'s husband', 描述: {zh: '姑姑/姑妈的丈夫', en: 'Husband of father\'s sister'}},
+                // 母亲的兄弟姐妹
+                {中文: '舅舅 / 舅父', pinyin: 'jiù jiu / jiù fù', 英文: 'maternal uncle', 描述: {zh: '母亲的兄弟', en: 'Mother\'s brother'}},
+                {中文: '舅妈 / 舅母', pinyin: 'jiù mā / jiù mǔ', 英文: 'maternal uncle\'s wife', 描述: {zh: '舅舅/舅父的妻子', en: 'Wife of mother\'s brother'}},
+                {中文: '姨妈 / 姨姨', pinyin: 'yí mā / yí yí', 英文: 'maternal aunt', 描述: {zh: '母亲的姐妹', en: 'Mother\'s sister'}},
+                {中文: '姨丈', pinyin: 'yí zhàng', 英文: 'maternal aunt\'s husband', 描述: {zh: '姨妈/姨姨的丈夫', en: 'Husband of mother\'s sister'}},
+            ],
+            '堂/表兄弟姐妹辈 (Cousins Generation)': [
+                {中文: '堂兄', pinyin: 'táng xiōng', 英文: 'older male paternal cousin', 描述: {zh: '伯叔的儿子', en: 'Son of father’s brother'}},
+                {中文: '堂嫂', pinyin: 'táng sǎo', 英文: 'wife of older paternal cousin', 描述: {zh: '堂兄的妻子', en: 'Wife of older paternal cousin'}},
+                {中文: '堂弟', pinyin: 'táng dì', 英文: 'younger male paternal cousin', 描述: {zh: '伯叔的儿子（比自己年轻）', en: 'Younger son of father’s brother'}},
+                {中文: '堂弟媳', pinyin: 'táng dì xí', 英文: 'wife of younger paternal cousin', 描述: {zh: '堂弟的妻子', en: 'Wife of younger paternal cousin'}},
+                {中文: '堂姐', pinyin: 'táng jiě', 英文: 'older female paternal cousin', 描述: {zh: '伯叔的女儿', en: 'Daughter of father’s brother'}},
+                {中文: '堂姐夫', pinyin: 'táng jiě fū', 英文: 'husband of older paternal cousin', 描述: {zh: '堂姐的丈夫', en: 'Husband of older paternal cousin'}},
+                {中文: '堂妹', pinyin: 'táng mèi', 英文: 'younger female paternal cousin', 描述: {zh: '伯叔的女儿（比自己年轻）', en: 'Younger daughter of father’s brother'}},
+                {中文: '堂妹夫', pinyin: 'táng mèi fū', 英文: 'husband of younger paternal cousin', 描述: {zh: '堂妹的丈夫', en: 'Husband of younger paternal cousin'}},
+                {中文: '表兄', pinyin: 'biǎo xiōng', 英文: 'older male maternal cousin', 描述: {zh: '舅姨的儿子', en: 'Son of mother’s sibling'}},
+                {中文: '表弟', pinyin: 'biǎo dì', 英文: 'younger male maternal cousin', 描述: {zh: '舅姨的儿子（比自己年轻）', en: 'Younger son of mother’s sibling'}},
+                {中文: '表姐', pinyin: 'biǎo jiě', 英文: 'older female maternal cousin', 描述: {zh: '舅姨的女儿', en: 'Daughter of mother’s sibling'}},
+                {中文: '表妹', pinyin: 'biǎo mèi', 英文: 'younger female maternal cousin', 描述: {zh: '舅姨的女儿（比自己年轻）', en: 'Younger daughter of mother’s sibling'}},
+            ],
+             '子女及孙辈 (Children & Grandchildren Generation)': [
+                {中文: '儿子', pinyin: 'ér zi', 英文: 'son', 描述: {zh: '你的儿子', en: 'Your son'}},
+                {中文: '女儿', pinyin: 'nǚ ér', 英文: 'daughter', 描述: {zh: '你的女儿', en: 'Your daughter'}},
+                {中文: '儿媳', pinyin: 'ér xí', 英文: 'daughter-in-law', 描述: {zh: '你儿子的妻子', en: 'Your son\'s wife'}},
+                {中文: '女婿', pinyin: 'nǚ xù', 英文: 'son-in-law', 描述: {zh: '你女儿的丈夫', en: 'Your daughter\'s husband'}},
+                {中文: '孙子', pinyin: 'sūn zi', 英文: 'paternal grandson', 描述: {zh: '你儿子的儿子', en: 'Your son\'s son'}},
+                {中文: '孙女', pinyin: 'sūn nǚ', 英文: 'paternal granddaughter', 描述: {zh: '你儿子的女儿', en: 'Your son\'s daughter'}},
+                {中文: '外孙', pinyin: 'wài sūn', 英文: 'maternal grandson', 描述: {zh: '你女儿的儿子', en: 'Your daughter\'s son'}},
+                {中文: '外孙女', pinyin: 'wài sūn nǚ', 英文: 'maternal granddaughter', 描述: {zh: '你女儿的女儿', en: 'Your daughter\'s daughter'}},
+                {中文: '侄子', pinyin: 'zhí zi', 英文: 'paternal nephew', 描述: {zh: '你兄弟的儿子', en: 'Your brother\'s son'}},
+                {中文: '侄女', pinyin: 'zhí nǚ', 英文: 'paternal niece', 描述: {zh: '你兄弟的女儿', en: 'Your brother\'s daughter'}},
+                {中文: '外甥', pinyin: 'wài shēng', 英文: 'maternal nephew', 描述: {zh: '你姐妹的儿子', en: 'Your sister\'s son'}},
+                {中文: '外甥女', pinyin: 'wài shēng nǚ', 英文: 'maternal niece', 描述: {zh: '你姐妹的女儿', en: 'Your sister\'s daughter'}},
+                // 新增：堂兄弟的儿女
+                {中文: '从侄', pinyin: 'cóng zhí', 英文: 'son of paternal male cousin', 描述: {zh: '你的堂兄弟的儿子', en: 'Son of your paternal male cousin'}},
+                {中文: '从侄女', pinyin: 'cóng zhí nǚ', 英文: 'daughter of paternal male cousin', 描述: {zh: '你的堂兄弟的女儿', en: 'Daughter of your paternal male cousin'}},
+                // 表兄弟姐妹的孩子
+                {中文: '表侄子', pinyin: 'biǎo zhí zi', 英文: 'cousin\'s son (paternal)', 描述: {zh: '你的堂/表兄的儿子', en: 'Son of your paternal cousin'}},
+                {中文: '表侄女', pinyin: 'biǎo zhí nǚ', 英文: 'cousin\'s daughter (paternal)', 描述: {zh: '你的堂/表兄的女儿', en: 'Daughter of your paternal cousin'}},
+                {中文: '表外甥', pinyin: 'biǎo wài shēng', 英文: 'cousin\'s son (maternal)', 描述: {zh: '你的堂/表姐的儿子', en: 'Son of your maternal cousin'}},
+                {中文: '表外甥女', pinyin: 'biǎo wài shēng nǚ', 英文: 'cousin\'s daughter (maternal)', 描述: {zh: '你的堂/表姐的女儿', en: 'Daughter of your maternal cousin'}},
+            ]
         };
 
-        /**
-         * Plays the given text in the specified language.
-         * @param {string} text The text to be spoken.
-         * @param {string} lang The language code (e.g., 'en-US' or 'zh-CN').
-         */
-        function speak(text, lang) {
+        // 语音播放功能
+        function speakText(text, lang) {
+            // Check for browser support
             if ('speechSynthesis' in window) {
-                // Cancel any previous speech synthesis
+                // Cancel any previous speech
                 window.speechSynthesis.cancel();
                 
+                // Create a new utterance
                 const utterance = new SpeechSynthesisUtterance(text);
+                
+                // Set the language
                 utterance.lang = lang;
                 
-                // Set a slightly slower rate for better clarity
-                utterance.rate = 0.9; 
-
-                // Find a voice for the specified language
-                const voices = window.speechSynthesis.getVoices();
-                const selectedVoice = voices.find(voice => voice.lang.includes(lang));
-                if (selectedVoice) {
-                    utterance.voice = selectedVoice;
-                }
-                
+                // Speak the text
                 window.speechSynthesis.speak(utterance);
             } else {
-                console.error("Speech Synthesis API not supported in this browser.");
+                // If the browser doesn't support the Web Speech API
+                console.error('Web Speech API is not supported in this browser.');
+                // You can add a visual alert here if needed
+                // alert('您的浏览器不支持语音功能。');
             }
         }
+
+        // 动态生成词汇表表格
+        function generateGlossaryTable() {
+            const tableBody = document.querySelector('#glossary-table-body');
+            tableBody.innerHTML = ''; // 清空现有内容
+
+            for (const category in glossaryData) {
+                // 添加分类标题
+                const categoryRow = document.createElement('tr');
+                categoryRow.innerHTML = `<td colspan="3"><div class="category-heading">${category}</div></td>`;
+                tableBody.appendChild(categoryRow);
+
+                // 添加备注（仅针对“堂/表兄弟姐妹辈”类别）
+                if (category === '堂/表兄弟姐妹辈 (Cousins Generation)') {
+                    const remarkRow = document.createElement('tr');
+                    remarkRow.innerHTML = `<td colspan="3"><div class="category-remark">备注：家谱中，带“堂”字的通常指父亲这边的亲戚，因为他们与你共享一个祖父，所以通常与你同姓。带“表”字的则通常指母亲那边的亲戚，他们随母亲的丈夫的姓氏，因此姓氏可能与你不同。<br/><br/>(In a family tree, "táng" (堂) generally refers to relatives on your father's side. They usually share the same surname as you because they share a common paternal grandfather. "Biǎo" (表) generally refers to relatives on your mother's side. They take their father's surname, which is often different from yours.)</div></td>`;
+                    tableBody.appendChild(remarkRow);
+                }
+
+                // 添加该分类下的所有词汇
+                glossaryData[category].forEach(item => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>
+                            ${item.中文}
+                            <svg class="speaker-icon inline-block" onclick="speakText('${item.中文}', 'zh-CN')" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                                <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.81 5 3.54 5 6.71s-2.11 5.9-5 6.71v2.06c4.01-.91 7-4.46 7-8.77s-2.99-7.86-7-8.77z"/>
+                            </svg>
+                            <span class="pinyin-text">${item.pinyin}</span>
+                        </td>
+                        <td>
+                            ${item.英文}
+                            <svg class="speaker-icon inline-block" onclick="speakText('${item.英文}', 'en-US')" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                                <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.81 5 3.54 5 6.71s-2.11 5.9-5 6.71v2.06c4.01-.91 7-4.46 7-8.77s-2.99-7.86-7-8.77z"/>
+                            </svg>
+                        </td>
+                        <td>
+                            <div class="mb-2">
+                                ${item.描述.zh}
+                                <svg class="speaker-icon inline-block" onclick="speakText('${item.描述.zh}', 'zh-CN')" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                                    <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.81 5 3.54 5 6.71s-2.11 5.9-5 6.71v2.06c4.01-.91 7-4.46 7-8.77s-2.99-7.86-7-8.77z"/>
+                                </svg>
+                            </div>
+                            <div class="text-gray-500">
+                                ${item.描述.en}
+                                <svg class="speaker-icon inline-block" onclick="speakText('${item.描述.en}', 'en-US')" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                                    <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.81 5 3.54 5 6.71s-2.11 5.9-5 6.71v2.06c4.01-.91 7-4.46 7-8.77s-2.99-7.86-7-8.77z"/>
+                                </svg>
+                            </div>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            }
+        }
+
+        // 页面加载完成后执行
+        window.onload = function() {
+            generateGlossaryTable();
+        };
     </script>
+
 </body>
 </html>
